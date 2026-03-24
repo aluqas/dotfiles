@@ -1,0 +1,74 @@
+
+
+[editor]
+true-color = true
+color-modes = true
+rulers = [72, 79, 99, 120]
+text-width = 120
+cursorline = true          # 行のハイライト
+cursorcolumn = false       # 列のハイライト
+auto-completion = true
+path-completion = true
+auto-format = true
+auto-info = true           # 情報ボックス
+shell = ["fish"]
+bufferline = "multiple"
+line-number = "relative"
+
+
+[editor.statusline]
+left = ["mode", "spinner", "diagnostics"]
+center = ["file-name", "file-modification-indicator", "read-only-indicator"]
+right = [
+  "selections",
+  "position",
+  "file-encoding",
+  "file-line-ending",
+  "file-type",
+]
+mode.normal = "👾NOR"
+mode.insert = "🖊️INS"
+mode.select = "📏SEL"
+
+[editor.lsp]
+enable = true
+display-progress-messages = true
+display-inlay-hints = true
+
+[editor.cursor-shape]
+normal = "block"
+insert = "bar"
+select = "underline" # underline
+
+[editor.auto-save]
+focus-lost = true
+after-delay.enable = true
+after-delay.timeout = 5000 # ミリ秒
+
+[editor.whitespace.render]
+space = "all"   # "all"か"none"の2択しかない
+tab = "all"
+newline = "all"
+
+[editor.whitespace.charcters]
+space = "·"
+tab = "→"
+newline = "⏎"
+
+[editor.indent-guides]
+render = false
+
+[editor.gutters]
+layout = ["diagnostics", "spacer", "line-numbers", "spacer", "diff"]
+
+[editor.gutters.line-numbers]
+min-width = 6
+
+# [editor.gutters.diff]
+
+[editor.soft-wrap]
+enable = true
+
+[editor.inline-diagnostics]
+cursor-line = "info"    # error, warning, info, hint
+other-lines = "disable"

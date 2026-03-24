@@ -1,0 +1,18 @@
+[general]
+
+
+[terminal]
+shell = "/opt/homebrew/bin/fish"
+
+[window]
+decorations = "Transparent"  # "Buttonless", x = 7, y = 7
+padding = { x = 10, y = 25 }
+
+opacity = 0.6
+blur = true
+option_as_alt = "Both"
+
+
+[font]
+normal = { family = "HackGen35 Console NF", style = "Regular" }
+size = 14

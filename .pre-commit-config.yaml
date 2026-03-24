@@ -1,0 +1,25 @@
+default_stages:
+  - pre-commit
+
+repos:
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck
+        entry: devenv --impure shell shellcheck-hook
+        language: system
+        types:
+          - shell
+      - id: typos
+        name: typos
+        entry: devenv --impure shell typos-hook
+        language: system
+        types:
+          - text
+      - id: actionlint
+        name: actionlint
+        entry: devenv --impure shell actionlint-hook
+        language: system
+        files: ^.github/workflows/
+        types:
+          - yaml

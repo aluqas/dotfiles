@@ -1,0 +1,39 @@
+
+**/.agents
+
+**/.saqula
+
+# 一般
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# icon は末尾に 2 つの `\r` が必要
+Icon
+
+# サムネイル
+._*
+
+# volume の root に現れうるファイル
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+.com.apple.timemachine.donotpresent
+
+# remote AFP share 上に作成される可能性のある directory
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Python
+
+# Rust
+
+# TS
+**/.cursor/.agent-tools

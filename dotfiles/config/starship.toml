@@ -1,0 +1,265 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+palette = 'rose-pine-moon'
+scan_timeout = 20
+command_timeout = 200
+
+continuation_prompt = "[∙](bright-black) "
+
+#     
+
+format = """\
+╭\
+[](fg:overlay)\
+[$status](bg:overlay)\
+[$sudo$os$jobs ](fg:text bg:overlay)\
+[](fg:overlay bg:rose)[$directory ](fg:text bg:rose)[](fg:rose bg:overlay)\
+[$username$hostname$localip](fg:text bg:overlay)\
+[ $git_branch$git_commit$git_state$git_status ](fg:overlay bg:text)\
+[ ](fg:text bg:overlay)[](fg:overlay)\
+$fill\
+$deno$nodejs$bun\
+$python$rust$golang\
+$line_break\
+│  $time
+╰─ \
+"""
+
+right_format = """\
+$battery $cmd_duration $memory_usage
+"""
+
+# スタイリング
+[character]
+success_symbol = '🎉 '
+error_symbol = '💀 '
+
+[line_break]
+disabled = false
+
+[fill]
+symbol = '─'
+
+# -----------------------------------------------------------------------------
+# シンボル
+
+# 環境
+[sudo]
+disabled = false
+format = '🌸'
+
+[username]
+disabled = false
+format = '[$user]($style) '
+
+[directory]
+format = '$read_only $path'
+read_only = '🔒 '
+truncation_symbol = '…/'
+truncation_length = 3
+truncate_to_repo = true
+
+[shell]
+format = '$indicator'
+bash_indicator = '🐚 '
+zsh_indicator = '🐚 '
+cmd_indicator = '🐚 '
+fish_indicator = '🐟 '
+powershell_indicator = '🔥 '
+nu_indicator = '🐚 '
+xonsh_indicator = '🐚 '
+
+[os]
+format = '[$symbol $name]($style) '
+style = 'bold blue'
+
+[os.symbols]
+Macos = "🍎"
+Windows = "🪟"
+Linux = "🐧"
+Arch = "🎗️"
+CentOS = "💠"
+Debian = "🌀"
+Ubuntu = "🎯 "
+Kali = "🐉"
+Android = "🤖"
+
+# ステータス
+[time]
+disabled = false
+format = '⏰️ [$time]($style) '
+time_format = '%H:%M'
+style = 'bold yellow'
+
+[battery]
+disabled = false
+format = '$symbol [$percentage]($style) '
+full_symbol = '🔋'
+charging_symbol = '⚡️'
+discharging_symbol = '🪫'
+unknown_symbol = '❓️'
+empty_symbol = '💀'
+display = [
+  { threshold = 10, style = 'bold red' },
+  { threshold = 30, style = 'bold yellow' },
+  { threshold = 90, style = 'bold green' },
+]
+
+[status]
+disabled = false
+format = '$symbol $maybe_int'
+symbol = '❌'
+success_symbol = '・'
+not_executable_symbol = '🚫'
+not_found_symbol = '🔍'
+sigint_symbol = '🧱'
+signal_symbol = '⚡️'
+
+[memory_usage]
+disabled = false
+threshold = 75
+format = '[🧠 $ram]($style) '
+style = 'bold red'
+
+[jobs]
+disabled = false
+threshold = 1
+format = '[⚙️ $number]($style) '
+style = 'bold blue'
+
+[cmd_duration]
+disabled = false
+min_time = 2000
+format = '[⏱ $duration]($style) '
+style = 'bold yellow'
+
+[hostname]
+ssh_only = true
+format = '[@$hostname]($style) '
+style = 'bold green'
+
+[localip]
+ssh_only = true
+format = '[@$localip]($style) '
+style = 'bold green'
+
+# ----------------
+# Git
+[git_branch]
+format = '🌳 $branch'
+# symbol = '🌳 '
+
+[git_commit]
+format = '🏷 $hash'
+# tag_symbol = " 🏷"
+
+[git_status]
+disabled = true
+format = '$all_status'
+conflicted = "="
+ahead = ">"
+behind = "<"
+diverged = "x"
+stashed = "*"
+untracked = "?"
+modified = "!"
+renamed = "~"
+deleted = "x"
+staged = "+"
+
+[git_state]
+format = '[$symbol$state]($style) '
+
+[git_metrics]
+disabled = true
+
+
+# プログラミング言語
+[bun]
+format = "[](fg:rose)[🍔](bg:rose)[ $version ](fg:rose bg:overlay)[](fg:overlay)"
+
+[deno]
+format = "[](fg:pine)[🦕](bg:pine)[ $version ](fg:pine bg:overlay)[](fg:overlay)"
+
+[nodejs]
+format = "[](fg:foam)[🟢](bg:foam)[ $version ](fg:foam bg:overlay)[](fg:overlay) "
+
+[python]
+format = "[](fg:iris)[🐍](bg:iris)[ $version ](fg:iris bg:overlay)[](fg:overlay) "
+
+[rust]
+format = "[](fg:gold)[🦀](bg:gold)[ $version ](fg:gold bg:overlay)[](fg:overlay) "
+
+[golang]
+format = "[](fg:foam)[🐹](bg:foam)[ $version ](fg:foam bg:overlay)[](fg:overlay) "
+
+[package]
+format = "[](fg:foam)[📦](bg:foam)[ $version ](fg:foam bg:overlay)[](fg:overlay) "
+
+# コンテナ
+[container]
+format = "[](fg:pine)[📦](bg:pine)[ $name ](fg:pine bg:overlay)[](fg:overlay) "
+disabled = false
+
+[kubernetes]
+disabled = false
+format = "[](fg:love)[⎈](bg:love)[ $context ](fg:love bg:overlay)[](fg:overlay) "
+
+[docker_context]
+disabled = false
+format = "[](fg:foam)[🐳](bg:foam)[ $context ](fg:foam bg:overlay)[](fg:overlay) "
+
+# -----------------------------------------------------------------------------
+# カラーパレット
+
+[palettes.rose-pine]
+base = '#191724'
+surface = '#1f1d2e'
+overlay = '#26233a'
+muted = '#6e6a86'
+subtle = '#908caa'
+text = '#e0def4'
+love = '#eb6f92'
+gold = '#f6c177'
+rose = '#ebbcba'
+pine = '#31748f'
+foam = '#9ccfd8'
+iris = '#c4a7e7'
+highlight_low = '#21202e'
+highlight_med = '#403d52'
+highlight_high = '#524f67'
+
+[palettes.rose-pine-moon]
+base = '#232136'
+surface = '#2a273f'
+overlay = '#393552'
+muted = '#6e6a86'
+subtle = '#908caa'
+text = '#e0def4'
+love = '#eb6f92'
+gold = '#f6c177'
+rose = '#ea9a97'
+pine = '#3e8fb0'
+foam = '#9ccfd8'
+iris = '#c4a7e7'
+highlight_low = '#2a283e'
+highlight_med = '#44415a'
+highlight_high = '#56526e'
+
+[palettes.rose-pine-dawn]
+base = '#faf4ed'
+surface = '#fffaf3'
+overlay = '#f2e9e1'
+muted = '#9893a5'
+subtle = '#797593'
+text = '#575279'
+love = '#b4637a'
+gold = '#ea9d34'
+rose = '#d7827e'
+pine = '#286983'
+foam = '#56949f'
+iris = '#907aa9'
+highlight_low = '#f4ede8'
+highlight_med = '#dfdad9'
+highlight_high = '#cecacd'

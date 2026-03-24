@@ -1,0 +1,12 @@
+[[language]]
+name = "python"
+language-servers = ["ruff", "ty"]
+auto-format = true
+
+[language-server.ruff]
+command = "ruff"
+args = ["server"]
+
+[language-server.ty]
+command = "ty"
+args = ["server"]

@@ -1,0 +1,16 @@
+/result
+.DS_Store
+.age-identity
+
+.serena/
+.vscode/
+.direnv/
+.devenv/
+
+# Secrets: only track encrypted files and config
+/secrets/*
+!/secrets/*.age
+!/secrets/*.pub
+!/secrets/public-keys/
+!/secrets/secrets.nix
+!/secrets/README.md
