@@ -1,6 +1,6 @@
 {
   hostname = "oci-nixcloud"; # 希望の hostname に置き換える。
-  deployHost = "oci-nixcloud.fairy-sargas.ts.net";
+  deployHost = "oci-arm.fairy-sargas.ts.net"; # deploy-rs
   username = "saqula"; # 希望の username に置き換える。
   # authorized_keys 用のブートストラップ / 緊急用鍵。
   # ホスト起動後の通常のリモート管理は Tailscale を想定する。

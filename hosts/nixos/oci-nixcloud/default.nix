@@ -46,6 +46,7 @@
 
   networking.hostName = hostVars.hostname;
   networking.firewall.allowedTCPPorts = [22];
+  fileSystems."/persist".neededForBoot = true;
 
   services.openssh.settings = {
     PermitRootLogin = "prohibit-password";

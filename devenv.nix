@@ -4,12 +4,13 @@
   ...
 }: {
   # https://devenv.sh/basics/
-  devenv.root = let
-    subdir = builtins.getEnv "PWD";
-  in
-    if subdir != ""
-    then subdir
-    else builtins.toString ./.;
+  devenv.root = lib.mkForce (
+    let
+      subdir = builtins.getEnv "PWD";
+    in
+      if subdir != ""
+      then subdir
+      else builtins.toString ./.);
   env.GREET = "Antigravity Nix Environment";
 
   imports = [
@@ -122,6 +123,7 @@
   #scripts."switch-bootstrap".exec = "nh os switch . -H nixos-bootstrap";
   scripts."build-lab".exec = "nix build --dry-run .#nixosConfigurations.oci-nixcloud.config.system.build.toplevel --no-link";
   scripts."switch-lab".exec = "nh os switch . -H oci-nixcloud";
+  scripts."deploy-lab-dry".exec = "nix run .#deploy-rs -- --dry-activate --remote-build .#oci-nixcloud";
   scripts."deploy-lab".exec = "nix run .#deploy-rs -- --remote-build .#oci-nixcloud";
   scripts.update.exec = ''
     set -euo pipefail
