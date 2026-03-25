@@ -62,10 +62,10 @@ in {
             sleep 5
           done
 
-          # Cilium がすでに入っているか確認する（running pod を見る）
-          if cilium status --wait=false 2>/dev/null | grep -q "Cilium:"; then
-            echo "Cilium already running. Skipping install."
-            cilium status
+          # Cilium DaemonSet の存在で install 済みを確認する（status grep より確実）
+          if kubectl get daemonset cilium -n kube-system >/dev/null 2>&1; then
+            echo "Cilium already installed."
+            cilium status || true
             exit 0
           fi
 
