@@ -53,14 +53,19 @@ in {
         };
 
         script = ''
-          # K3s が ready になるのを待つ
+          # K3s ノードが Ready になるのを待つ（最大 5 分）
           echo "Waiting for K3s to be ready..."
           for i in $(seq 1 60); do
-            if kubectl get nodes 2>/dev/null | grep -q "Ready"; then
+            if kubectl get nodes 2>/dev/null | grep -q " Ready "; then
+              echo "K3s is ready."
               break
             fi
+            if [ "$i" -eq 60 ]; then
+              echo "Timeout: K3s node did not become Ready."
+              exit 1
+            fi
             sleep 5
-            done
+          done
 
           # namespace がなければ作る
           if ! kubectl get namespace argocd 2>/dev/null; then
@@ -125,6 +130,11 @@ in {
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
+          TimeoutStartSec = "15min";
+          Restart = "on-failure";
+          RestartSec = "60s";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "10min";
         };
       };
 
@@ -139,9 +149,16 @@ in {
         path = [pkgs.tailscale pkgs.jq];
 
         script = ''
-          # Tailscale が ready になるのを待つ
-          until tailscale status --json 2>/dev/null | jq -e '.BackendState == "Running"' > /dev/null; do
-            echo "Waiting for Tailscale..."
+          # Tailscale が ready になるのを待つ（最大 5 分）
+          for i in $(seq 1 150); do
+            if tailscale status --json 2>/dev/null | jq -e '.BackendState == "Running"' > /dev/null; then
+              echo "Tailscale is running."
+              break
+            fi
+            if [ "$i" -eq 150 ]; then
+              echo "Timeout: Tailscale did not become Running."
+              exit 1
+            fi
             sleep 2
           done
 
@@ -152,6 +169,11 @@ in {
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
+          TimeoutStartSec = "10min";
+          Restart = "on-failure";
+          RestartSec = "30s";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "5min";
         };
       };
     })

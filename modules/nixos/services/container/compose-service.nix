@@ -143,6 +143,10 @@ in {
             Type = "oneshot";
             RemainAfterExit = true;
             TimeoutStartSec = "10min";
+            Restart = "on-failure";
+            RestartSec = "30s";
+            StartLimitBurst = 3;
+            StartLimitIntervalSec = "10min";
           };
         };
       })

@@ -79,7 +79,7 @@ in {
             --set gatewayAPI.enabled=true
 
           # Cilium が ready になるのを待つ
-          cilium status --wait
+          cilium status --wait --wait-duration 10m
 
           echo "Cilium configured (Gateway API enabled)!"
           echo "Run 'cilium hubble ui' to access the Hubble UI"
@@ -88,6 +88,11 @@ in {
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
+          TimeoutStartSec = "15min";
+          Restart = "on-failure";
+          RestartSec = "60s";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "10min";
         };
       };
     })

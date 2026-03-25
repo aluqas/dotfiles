@@ -52,8 +52,19 @@ in {
           KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
         };
         script = ''
-          echo "Waiting for K3s..."
-          until kubectl get nodes; do sleep 5; done
+          # K3s ノードが Ready になるのを待つ（最大 5 分）
+          echo "Waiting for K3s node to be Ready..."
+          for i in $(seq 1 60); do
+            if kubectl get nodes 2>/dev/null | grep -q " Ready "; then
+              echo "K3s is ready."
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Timeout: K3s node did not become Ready."
+              exit 1
+            fi
+            sleep 5
+          done
 
           if kubectl get namespace longhorn-system >/dev/null 2>&1; then
             echo "Longhorn already installed."
@@ -67,13 +78,18 @@ in {
             --namespace longhorn-system \
             --create-namespace \
             --set defaultSettings.createDefaultDiskLabeledNodes=true \
-            --wait
+            --wait --timeout=15m
 
           echo "Longhorn installed."
         '';
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
+          TimeoutStartSec = "20min";
+          Restart = "on-failure";
+          RestartSec = "60s";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "15min";
         };
       };
     })

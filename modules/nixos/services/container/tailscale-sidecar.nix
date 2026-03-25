@@ -86,16 +86,18 @@ in {
     };
   };
 
-  config = mkIf (cfg.instances != {}) {
+  config = let
+    enabledInstances = filterAttrs (_: i: i.enable) cfg.instances;
+  in mkIf (enabledInstances != {}) {
     # backend service が有効であることを保証する
     virtualisation.podman.enable =
       mkIf (any (i: i.backend == "podman") (
-        attrValues cfg.instances
+        attrValues enabledInstances
       ))
       true;
     virtualisation.docker.enable =
       mkIf (any (i: i.backend == "docker") (
-        attrValues cfg.instances
+        attrValues enabledInstances
       ))
       true;
 
@@ -134,14 +136,14 @@ in {
           };
         };
       })
-      cfg.instances;
+      enabledInstances;
 
     # state directory を作る
     systemd.tmpfiles.rules =
       mapAttrsToList (
         name: _instance: "d /var/lib/tailscale-${name} 0700 root root -"
       )
-      cfg.instances;
+      enabledInstances;
 
     # 設定 service を作る
     systemd.services =
@@ -176,9 +178,13 @@ in {
             Type = "oneshot";
             RemainAfterExit = true;
             TimeoutStartSec = "5min";
+            Restart = "on-failure";
+            RestartSec = "30s";
+            StartLimitBurst = 5;
+            StartLimitIntervalSec = "10min";
           };
         };
       })
-      cfg.instances;
+      enabledInstances;
   };
 }

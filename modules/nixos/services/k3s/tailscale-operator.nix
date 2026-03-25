@@ -59,11 +59,19 @@ in {
         };
 
         script = ''
-          # K3s を待つ
-          until kubectl get nodes >/dev/null 2>&1; do
-            echo "Waiting for K3s..."
+          # K3s ノードが Ready になるのを待つ（最大 5 分）
+          echo "Waiting for K3s node to be Ready..."
+          for i in $(seq 1 60); do
+            if kubectl get nodes 2>/dev/null | grep -q " Ready "; then
+              echo "K3s is ready."
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Timeout: K3s node did not become Ready."
+              exit 1
+            fi
             sleep 5
-            done
+          done
 
           # namespace を作る
           kubectl create namespace tailscale --dry-run=client -o yaml | kubectl apply -f -
@@ -84,7 +92,7 @@ in {
             --wait
 
           # Operator が ready になるのを待つ
-          kubectl wait --for=condition=available deployment/operator -n tailscale --timeout=120s || true
+          kubectl wait --for=condition=available deployment/operator -n tailscale --timeout=120s
 
           echo "Tailscale Operator deployed"
         '';
@@ -92,6 +100,11 @@ in {
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
+          TimeoutStartSec = "10min";
+          Restart = "on-failure";
+          RestartSec = "60s";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "10min";
         };
       };
 

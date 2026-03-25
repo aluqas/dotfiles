@@ -35,9 +35,14 @@ in {
       # Helm で Rancher をデプロイする
       systemd.services.rancher-deploy = {
         description = "Deploy Rancher to K3s (Helm)";
-        after = ["k3s.service" "tailscale-operator-deploy.service" "network-online.target"];
-        requires = ["k3s.service"];
-        wants = ["network-online.target" "tailscale-operator-deploy.service"];
+        after = [
+          "k3s.service"
+          "cilium-install.service"
+          "tailscale-operator-deploy.service"
+          "network-online.target"
+        ];
+        requires = ["k3s.service" "cilium-install.service" "tailscale-operator-deploy.service"];
+        wants = ["network-online.target"];
         wantedBy = ["multi-user.target"];
 
         path = [pkgs.kubernetes-helm pkgs.kubectl pkgs.k3s];
@@ -47,9 +52,31 @@ in {
         };
 
         script = ''
-          # K3s を待つ
-          until kubectl get nodes >/dev/null 2>&1; do
-            echo "Waiting for K3s..."
+          # K3s ノードが Ready になるのを待つ（最大 5 分）
+          echo "Waiting for K3s node to be Ready..."
+          for i in $(seq 1 60); do
+            if kubectl get nodes 2>/dev/null | grep -q " Ready "; then
+              echo "K3s is ready."
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Timeout: K3s node did not become Ready."
+              exit 1
+            fi
+            sleep 5
+          done
+
+          # Tailscale IngressClass が使えるのを確認する
+          echo "Waiting for Tailscale IngressClass..."
+          for i in $(seq 1 60); do
+            if kubectl get ingressclass tailscale 2>/dev/null; then
+              echo "Tailscale IngressClass is available."
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Timeout: Tailscale IngressClass not found."
+              exit 1
+            fi
             sleep 5
           done
 
@@ -57,8 +84,8 @@ in {
           echo "Ensuring cert-manager is installed..."
           if ! kubectl get namespace cert-manager 2>/dev/null; then
             kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
-            kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=300s || true
-            kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=300s || true
+            kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=600s
+            kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=600s
             sleep 30
           fi
 
@@ -90,6 +117,11 @@ in {
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
+          TimeoutStartSec = "25min";
+          Restart = "on-failure";
+          RestartSec = "60s";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "15min";
         };
       };
     }))
