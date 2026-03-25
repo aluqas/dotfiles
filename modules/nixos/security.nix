@@ -13,6 +13,7 @@
 }: let
   cfg = config.saqula.core.security;
   inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
+  secrets = saqulaLib.secrets;
 in {
   options.saqula.core.security = mkFeatureOptions "NixOS security integrations";
 
@@ -27,6 +28,11 @@ in {
       # age identity を永続ストレージに置き、ロールバックや
       # 一時的な root 再構築をまたいでも復号が動くようにする。
       age.identityPaths = [ "/persist/var/lib/age/keys.txt" ];
+
+      # SSH keys（Darwin の base.nix と対称になるように定義）
+      age.secrets.id_ed25519_git = secrets.mkSshKey "id_ed25519_git";
+      age.secrets.id_ed25519_emergency = secrets.mkSshKey "id_ed25519_emergency";
+      age.secrets.ssh-config = secrets.mkSshConfig "config.age";
     }
 
     (wrapConfig cfg {
