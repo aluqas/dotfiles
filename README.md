@@ -71,6 +71,17 @@ clean
 - secret を追加したい: `secrets/*.age`, `secrets/secrets.nix`, `lib/secrets.nix`, `lib/keys.nix`
 - deploy や bootstrap 手順を変えたい: `ops/*` または `scripts/*`
 
+## dotfiles の反映方針
+
+この repo の user-facing な設定ファイルは、原則として mutable を前提にします。
+
+- app 側で編集した内容を repo に回収したい設定は `mkOutOfStoreSymlink` で local checkout に直結する
+- state / token / cache / history のような runtime data は Nix で管理しない
+- directory ごと link するときは、配下に mutable state が混ざらないことを先に確認する
+
+つまり、`/nix/store` に固定したいかどうかではなく、
+「その変更を repo で追いたいか」「app に自由に書かせるべきか」を先に判断する運用です。
+
 ## 共通機能
 
 ### Stylix / テーマ

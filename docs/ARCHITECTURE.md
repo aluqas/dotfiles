@@ -53,6 +53,24 @@
 
 `ops/*` や `templates/*` は重要ですが、host assembly の中心ではありません。
 
+## dotfiles 反映ポリシー
+
+この repo の dotfiles は、基本的に mutable を前提に扱います。
+
+- app 側の変更をそのまま repo に残したい設定は `mkOutOfStoreSymlink` で local checkout に直結する
+- app 側が保持すべき state / token / cache / history は Nix 管理しない
+- `source = "${inputs.self}/..."` のような store 直リンクは、immutable に固定したい静的ファイルだけに使う
+
+特に `~/.config/*` や `~/Library/Application Support/*` を directory 単位で link するときは、
+配下に runtime state が混ざっていないかを必ず確認します。
+
+判断基準は次の 2 つです。
+
+1. app がその file を自分で更新するか
+2. その更新を dotfiles repo に回収したいか
+
+回収したいなら `mkOutOfStoreSymlink`、回収しないならそもそも Nix で管理しません。
+
 ## 評価と組み立ての流れ
 
 この repo の中心は `flake.nix` と `lib/hosts.nix` です。  

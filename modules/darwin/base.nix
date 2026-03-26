@@ -72,7 +72,7 @@ in
       RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
       SCCACHE_DIR = "$HOME/.cache/sccache";
       LIBRARY_PATH = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib";
-      NH_FLAKE = "/Users/${hostVars.username}/system";
+      NH_FLAKE = "/Users/${hostVars.username}/${globalVars.checkoutDirName}";
     };
 
     environment.systemPackages = with pkgs; [

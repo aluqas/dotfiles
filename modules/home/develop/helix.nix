@@ -1,10 +1,12 @@
 {
   config,
   lib,
-  inputs,
+  globalVars,
   ...
 }: let
   cfg = config.saqula.home.develop.helix;
+  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
+  helixConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/helix";
 in {
   options.saqula.home.develop.helix.enable = lib.mkEnableOption "helix editor configuration";
 
@@ -12,8 +14,7 @@ in {
     programs.helix.enable = true;
 
     home.file.".config/helix" = {
-      source = "${inputs.self}/dotfiles/config/helix";
-      recursive = true;
+      source = helixConfigPath;
     };
   };
 }

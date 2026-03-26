@@ -1,10 +1,12 @@
 {
   config,
   lib,
-  inputs,
+  globalVars,
   ...
 }: let
   cfg = config.saqula.home.develop.neovim;
+  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
+  neovimConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/nvim-lazy";
 in {
   options.saqula.home.develop.neovim.enable = lib.mkEnableOption "neovim configuration";
 
@@ -17,6 +19,6 @@ in {
     };
 
     home.sessionVariables.NVIM_APPNAME = "nvim-lazy";
-    home.file.".config/nvim-lazy".source = "${inputs.self}/dotfiles/config/nvim-lazy";
+    home.file.".config/nvim-lazy".source = neovimConfigPath;
   };
 }
