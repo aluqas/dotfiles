@@ -242,9 +242,9 @@ in
         "com.apple.SetupAssistant" = {
           SiriDataSharingOptInStatus = 2;
         };
-        "com.apple.Safari" = {
-          UniversalSearchEnabled = false; # Safari のユニバーサル検索を無効化する
-        };
+        # "com.apple.Safari" = {
+        #  UniversalSearchEnabled = false; # Safari のユニバーサル検索を無効化する
+        # };
 
         # Spotlight はショートカットも検索カテゴリも無効化する
         "com.apple.symbolichotkeys" = {

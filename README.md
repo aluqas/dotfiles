@@ -48,6 +48,7 @@ clean
 
 この repo では raw な `nixos-rebuild` は使わず、`nh` または `devenv` のスクリプトを使う運用です。
 
+
 ## まずどこを見るか
 
 - repo 全体の入口と host 定義: [`flake.nix`](./flake.nix)
@@ -114,5 +115,6 @@ secret management は `ragenix` と age を前提にしています。
 ## 詳細ドキュメント
 
 - 設計、配線、置き場所の判断基準: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+- コンテナ運用（macOS / OrbStack）: [docs/CONTAINERS.md](./docs/CONTAINERS.md)
 - AI / コーディングエージェント向けの運用ルール: [AGENTS.md](./AGENTS.md)
 - secret と公開鍵の管理方針: [secrets/README.md](./secrets/README.md)

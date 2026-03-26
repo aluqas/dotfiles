@@ -57,6 +57,7 @@
     ++ [
       ../modules/darwin/base.nix
       ../modules/darwin/apps.nix
+      ../modules/darwin/lima.nix
     ];
 
   nixosModules =
