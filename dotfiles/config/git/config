@@ -22,5 +22,8 @@
     format = openpgp
     program = gpg
 
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+
 [ghq]
     root = ~/Documents/02_codes

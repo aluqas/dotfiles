@@ -3,6 +3,8 @@
   hostVars,
   ...
 }: {
+  saqula.secrets.enable = true;
+
   saqula.core = {
     boot.enable = true;
 

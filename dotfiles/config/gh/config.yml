@@ -1,7 +1,7 @@
 # 現在の config schema の version
 version: 1
 # git 操作時に使う protocol。対応値: ssh, https
-git_protocol: https
+git_protocol: ssh
 # issue / pull request などの作成時に gh が起動する editor。空なら環境変数を使う。
 editor:
 # どのタイミングで対話的 prompt を出すか。これは hostname で上書きできない global 設定。対応値: enabled, disabled

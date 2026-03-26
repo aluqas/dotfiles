@@ -48,6 +48,7 @@
 
   sharedModules = [
     ../modules/shared/options.nix
+    ../modules/shared/ssh-client.nix
     ../modules/shared/types.nix
   ];
 

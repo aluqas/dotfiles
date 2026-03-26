@@ -85,9 +85,6 @@ in
 
     programs.fish.enable = true;
     programs.nix-index-database.comma.enable = true;
-    programs.ssh.extraConfig = ''
-      Include /run/agenix/ssh-config
-    '';
 
     security.pam.services.sudo_local = {
       # sudo の認証で Touch ID を使えるようにする
@@ -291,9 +288,6 @@ in
     };
 
     age.identityPaths = [ "/Users/${hostVars.username}/.config/age/keys.txt" ];
-    age.secrets.id_ed25519_git = secrets.mkSshKey "id_ed25519_git";
-    age.secrets.id_ed25519_emergency = secrets.mkSshKey "id_ed25519_emergency";
-    age.secrets.ssh-config = secrets.mkSshConfig "config.age";
     age.secrets.gpg-secret-subkeys = secrets.mkGpgSecret "gpg-secret-subkeys";
     age.secrets.gpg-ownertrust = secrets.mkGpgSecret "gpg-ownertrust";
 

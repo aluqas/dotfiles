@@ -46,6 +46,8 @@ in {
         ps = "procs";
         top = "btm";
         diff = "delta";
+        zj = "zellij attach -c main";
+        zjr = "zellij attach -c";
       };
       interactiveShellInit = ''
         set -x GPG_TTY (tty)
