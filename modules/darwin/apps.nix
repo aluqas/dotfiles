@@ -24,13 +24,10 @@ in
       brews = [
         "mas"
 
-        "docker"
         "lima"
         "mole"
         "ni"
         "oci-cli"
-        "podman"
-        "podman-compose"
         "spicetify-cli"
       ];
 

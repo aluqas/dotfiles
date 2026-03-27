@@ -1,15 +1,17 @@
 {
   config,
   lib,
-  inputs,
+  globalVars,
   ...
 }: let
   cfg = config.saqula.home.develop.starship;
+  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
+  starshipConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/starship.toml";
 in {
   options.saqula.home.develop.starship.enable = lib.mkEnableOption "starship prompt configuration";
 
   config = lib.mkIf cfg.enable {
     programs.starship.enable = true;
-    home.file.".config/starship.toml".source = "${inputs.self}/dotfiles/config/starship.toml";
+    home.file.".config/starship.toml".source = starshipConfigPath;
   };
 }

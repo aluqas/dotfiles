@@ -22,6 +22,11 @@ in {
     };
 
     tailscale.enable = mkEnableOption "Rancher を Tailscale Operator で公開する";
+    publicDomain = mkOption {
+      type = types.str;
+      default = "fairy-sargas.ts.net";
+      description = "Rancher 公開に使うベースドメイン";
+    };
   };
 
   config = lib.mkMerge [
@@ -100,7 +105,7 @@ in {
           # SSL termination に Tailscale Ingress を使う
           helm upgrade --install rancher rancher-stable/rancher \
             --namespace cattle-system \
-            --set hostname=${cfg.hostname}.fairy-sargas.ts.net \
+            --set hostname=${cfg.hostname}.${cfg.publicDomain} \
             --set bootstrapPassword=admin \
             --set replicas=1 \
             --set ingress.enabled=true \
@@ -111,7 +116,7 @@ in {
             --wait --timeout=10m
 
           echo "Rancher deployed with Tailscale Ingress!"
-          echo "Access at: https://${cfg.hostname}.fairy-sargas.ts.net"
+          echo "Access at: https://${cfg.hostname}.${cfg.publicDomain}"
         '';
 
         serviceConfig = {

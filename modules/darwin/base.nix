@@ -16,6 +16,8 @@ let
     isDarwin = true;
     inherit (hostVars) username;
   };
+  sshDir = secrets.sshDir;
+  knownHosts = "${sshDir}/known_hosts";
 in
 {
   options.saqula.darwin.base.enable = mkEnableOption "Darwin base configuration";
@@ -72,7 +74,7 @@ in
       RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
       SCCACHE_DIR = "$HOME/.cache/sccache";
       LIBRARY_PATH = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib";
-      NH_FLAKE = "/Users/${hostVars.username}/system";
+      NH_FLAKE = "/Users/${hostVars.username}/${globalVars.checkoutDirName}";
     };
 
     environment.systemPackages = with pkgs; [
@@ -242,9 +244,9 @@ in
         "com.apple.SetupAssistant" = {
           SiriDataSharingOptInStatus = 2;
         };
-        "com.apple.Safari" = {
-          UniversalSearchEnabled = false; # Safari のユニバーサル検索を無効化する
-        };
+        # "com.apple.Safari" = {
+        #  UniversalSearchEnabled = false; # Safari のユニバーサル検索を無効化する
+        # };
 
         # Spotlight はショートカットも検索カテゴリも無効化する
         "com.apple.symbolichotkeys" = {
@@ -288,8 +290,27 @@ in
     };
 
     age.identityPaths = [ "/Users/${hostVars.username}/.config/age/keys.txt" ];
+    age.secrets.id_ed25519_git = secrets.mkSshKey "id_ed25519_git";
+    age.secrets.id_ed25519_emergency = secrets.mkSshKey "id_ed25519_emergency";
+    age.secrets.ssh-config = secrets.mkSshConfig "config.age";
     age.secrets.gpg-secret-subkeys = secrets.mkGpgSecret "gpg-secret-subkeys";
     age.secrets.gpg-ownertrust = secrets.mkGpgSecret "gpg-ownertrust";
+
+    system.activationScripts.ssh-known-hosts.text = ''
+      if [ ! -d "${sshDir}" ]; then
+        mkdir -p "${sshDir}"
+      fi
+
+      chown "${secrets.username}" "${sshDir}"
+      chmod 700 "${sshDir}"
+
+      if [ ! -e "${knownHosts}" ]; then
+        touch "${knownHosts}"
+      fi
+
+      chown "${secrets.username}" "${knownHosts}"
+      chmod 600 "${knownHosts}"
+    '';
 
     saqula.secrets.enable = true;
 

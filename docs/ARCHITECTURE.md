@@ -22,6 +22,45 @@
 - `hosts/*` は machine-specific な入口と最後の調整だけを持つ
 - `homes/*` は共有ユーザー環境の正規ルートである
 
+## 境界マトリクス（homes / hosts / modules / shared）
+
+配置判断を迷わないために、まず次の 4 層へ分類します。
+
+- `modules/shared/*`: 共通契約（option surface / type / 薄い共通 wiring）
+- `modules/*`: 再利用可能な実装（platform-specific または home 実装）
+- `homes/*`: ユーザー環境の共通合成（何を束ねるか、どこまで共有するか）
+- `hosts/*`: マシン固有の last-mile（ホスト事実と最小 override）
+
+それぞれに置くべき内容:
+
+1. `modules/shared/*`
+   - 置く: 複数 module で使う option 定義、型定義、横断 contract
+   - 置かない: host 固有値、単一 platform 専用の実装詳細
+2. `modules/darwin/*`, `modules/nixos/*`, `modules/home/*`
+   - 置く: 再利用可能な機能実装、platform / home の具体動作
+   - 置かない: 単一 host だけの事情（機器名、固定IP、provider依存）
+3. `homes/*`
+   - 置く: shared user UX の既定、home modules の束ね方、共通 policy
+   - 置かない: system-level service 実装、ホスト個別の一時対応
+4. `hosts/*`
+   - 置く: host facts（`vars.nix`）、hardware / disk、最終調整
+   - 置かない: 他 host でも使える実装本体
+
+## `shared` に寄せるかの Yes / No 判定
+
+次を上から順に判定します。1 つでも No があれば `modules/shared/*` には置きません。
+
+1. 複数 platform または複数 host で同じ意味の contract を使うか
+2. host 固有値（デバイス名、IP、provider事情）を含まずに表現できるか
+3. 実装本体ではなく、契約（option/type/wiring の骨組み）として切り出せるか
+4. `homes/*` の合成責務や `hosts/*` の last-mile 責務を侵食しないか
+
+補助ルール:
+
+- 実装を再利用したいだけなら `modules/<platform or home>/*`
+- user UX の共通既定をまとめたいなら `homes/*` または `profiles/home/*`
+- machine-specific な分岐が残るなら `hosts/*`
+
 ## repo の全体像
 
 ```text
@@ -52,6 +91,24 @@
 - `templates/*` は新規 project 用の雛形
 
 `ops/*` や `templates/*` は重要ですが、host assembly の中心ではありません。
+
+## dotfiles 反映ポリシー
+
+この repo の dotfiles は、基本的に mutable を前提に扱います。
+
+- app 側の変更をそのまま repo に残したい設定は `mkOutOfStoreSymlink` で local checkout に直結する
+- app 側が保持すべき state / token / cache / history は Nix 管理しない
+- `source = "${inputs.self}/..."` のような store 直リンクは、immutable に固定したい静的ファイルだけに使う
+
+特に `~/.config/*` や `~/Library/Application Support/*` を directory 単位で link するときは、
+配下に runtime state が混ざっていないかを必ず確認します。
+
+判断基準は次の 2 つです。
+
+1. app がその file を自分で更新するか
+2. その更新を dotfiles repo に回収したいか
+
+回収したいなら `mkOutOfStoreSymlink`、回収しないならそもそも Nix で管理しません。
 
 ## 評価と組み立ての流れ
 
@@ -188,6 +245,7 @@ shared option surface を定義する層です。
   - 例: 統一 service 定義の submodule 型
 
 ここは「実装」よりも「契約」を置く場所です。
+`modules/shared/*` は薄く保ち、実行ロジックが肥大化し始めたら `modules/darwin/*` / `modules/nixos/*` / `modules/home/*` へ戻します。
 
 ### `modules/darwin/*`
 
@@ -329,6 +387,7 @@ system policy を複数 host で共有したいなら、まずここに置きま
   - `base.nix` と `stylix.nix` の入口
 
 shared な user experience は host に直書きせず、まず `homes/saqula/*` を通します。
+個別ホストでしか使わない user 設定は、`hosts/*` 側で最小 override に留めます。
 
 ## `hosts/*` の構成
 
@@ -357,6 +416,8 @@ host は薄く保ち、最後の調整だけを担当します。
   - baseline server と hardware / disk config を import し、最小限の server bootstrap を組む
 - `hosts/nixos/oci-nixcloud/default.nix`
   - `nixos-server` + `nixos-oci-node` を import し、Tailscale, storage, K3s data path などの最後の調整を与える
+
+host で同じロジックが 2 回以上出現したら、`profiles/*` または `modules/*` へ引き上げることを検討します。
 
 ## クロスカット機能
 
@@ -437,11 +498,21 @@ impermanence は NixOS 側の横断機能です。
 ## アンチパターン
 
 - host 固有の調整を reusable module に書く
+- host 固有値を `modules/shared/*` に持ち込む
 - shared user tooling を host の `default.nix` に直書きする
 - secrets の path / owner / mode を各所で ad hoc に複製する
 - テーマ方針を host ごとに重複定義する
 - `flake.nix` に詳細実装を直接書き込む
 - native HM / NixOS option で足りるのに wrapper option を増やす
+
+## 変更レビュー時の境界チェック
+
+PR / commit 前に、変更単位ごとに次を確認します。
+
+1. この変更は「契約 (`modules/shared`) / 実装 (`modules/*`) / 合成 (`homes` or `profiles`) / 具現化 (`hosts`)」のどれか
+2. 置いた層より 1 つ下の層へ降ろすべき実装を混ぜていないか
+3. 置いた層より 1 つ上の層で決めるべき policy を固定していないか
+4. 同じ調整が複数 host に発生していないか（発生していれば引き上げ対象）
 
 この repo の目的は、設定を 1 箇所に集めることではなく、責務ごとに迷わず置けるようにすることです。  
 置き場所に迷ったら、「これは実装か、方針か、shared user env か、host-specific last mile か」を先に切り分けます。

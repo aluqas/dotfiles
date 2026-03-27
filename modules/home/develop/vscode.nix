@@ -2,12 +2,14 @@
   config,
   lib,
   pkgs,
+  globalVars,
   ...
 }: let
   cfg = config.saqula.home.develop.vscode;
+  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
 
-  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/system/dotfiles/vscode/settings.json";
-  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/system/dotfiles/vscode/keybindings.json";
+  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/vscode/settings.json";
+  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/vscode/keybindings.json";
 
   vscodeEditors = {
     cursor = {

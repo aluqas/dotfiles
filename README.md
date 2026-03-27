@@ -46,6 +46,8 @@ doctor
 clean
 ```
 
+`build-lab` は `oci-nixcloud` 用です。Darwin 上では `aarch64-linux` の dry-run build が失敗するため、スクリプトは自動的に eval のみ実行します。
+
 この repo では raw な `nixos-rebuild` は使わず、`nh` または `devenv` のスクリプトを使う運用です。
 
 ## まずどこを見るか
@@ -70,6 +72,38 @@ clean
 - テーマや配色を変えたい: `homes/saqula/stylix.nix` と `dotfiles/stylix/*`
 - secret を追加したい: `secrets/*.age`, `secrets/secrets.nix`, `lib/secrets.nix`, `lib/keys.nix`
 - deploy や bootstrap 手順を変えたい: `ops/*` または `scripts/*`
+
+## 境界の判断フロー（1分版）
+
+変更を置く場所は、次の順番で決めます。
+
+1. **契約か?**  
+   複数 module で共通の option / type を定義するなら `modules/shared/*`
+2. **実装か?**  
+   再利用可能な実装なら `modules/darwin/*` / `modules/nixos/*` / `modules/home/*`
+3. **合成か?**  
+   shared user env や policy の束ねなら `homes/*` または `profiles/*`
+4. **具現化か?**  
+   machine-specific な最終調整なら `hosts/*`
+
+`shared` に寄せるか迷う場合は、次を満たすときだけ寄せます。
+
+- 複数 host / platform で同じ contract を使う
+- host 固有値（IP, device, provider依存）を含まない
+- 実装本体ではなく契約として切り出せる
+
+詳細な判断基準とアンチパターンは [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) を参照してください。
+
+## dotfiles の反映方針
+
+この repo の user-facing な設定ファイルは、原則として mutable を前提にします。
+
+- app 側で編集した内容を repo に回収したい設定は `mkOutOfStoreSymlink` で local checkout に直結する
+- state / token / cache / history のような runtime data は Nix で管理しない
+- directory ごと link するときは、配下に mutable state が混ざらないことを先に確認する
+
+つまり、`/nix/store` に固定したいかどうかではなく、
+「その変更を repo で追いたいか」「app に自由に書かせるべきか」を先に判断する運用です。
 
 ## 共通機能
 
@@ -103,5 +137,6 @@ secret management は `ragenix` と age を前提にしています。
 ## 詳細ドキュメント
 
 - 設計、配線、置き場所の判断基準: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+- コンテナ運用（macOS / OrbStack）: [docs/CONTAINERS.md](./docs/CONTAINERS.md)
 - AI / コーディングエージェント向けの運用ルール: [AGENTS.md](./AGENTS.md)
 - secret と公開鍵の管理方針: [secrets/README.md](./secrets/README.md)

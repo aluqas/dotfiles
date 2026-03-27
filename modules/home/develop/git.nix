@@ -2,10 +2,13 @@
   config,
   lib,
   pkgs,
-  inputs,
+  globalVars,
   ...
 }: let
   cfg = config.saqula.home.develop.git;
+  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
+  gitConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/git";
+  ghConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/gh/config.yml";
 in {
   options.saqula.home.develop.git.enable = lib.mkEnableOption "git configuration";
 
@@ -19,8 +22,20 @@ in {
     ];
 
     home.file = {
-      ".config/git".source = "${inputs.self}/dotfiles/config/git";
-      ".config/gh".source = "${inputs.self}/dotfiles/config/gh";
+      ".config/git".source = gitConfigPath;
+      ".config/gh/config.yml".source = ghConfigPath;
     };
+
+    home.activation.ghConfigMigration = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
+      gh_dir="$HOME/.config/gh"
+
+      if [ -L "$gh_dir" ]; then
+        rm -f "$gh_dir"
+      fi
+
+      if [ ! -d "$gh_dir" ]; then
+        mkdir -p "$gh_dir"
+      fi
+    '';
   };
 }

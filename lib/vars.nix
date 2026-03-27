@@ -3,6 +3,7 @@
   defaultUser = "saqula";
   defaultTimezone = "Asia/Tokyo";
   defaultLocale = "en_US.UTF-8";
+  checkoutDirName = "dotfiles";
 
   # stateVersion を一元管理する
   stateVersions = {
