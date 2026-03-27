@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.develop.alacritty;
+  cfg = config.saqula.home.terminal.alacritty;
 in {
-  options.saqula.home.develop.alacritty.enable = lib.mkEnableOption "alacritty terminal configuration";
+  options.saqula.home.terminal.alacritty.enable = lib.mkEnableOption "alacritty terminal configuration";
 
   config = lib.mkIf cfg.enable {
     programs.alacritty = {

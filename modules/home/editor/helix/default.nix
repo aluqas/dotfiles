@@ -4,11 +4,11 @@
   globalVars,
   ...
 }: let
-  cfg = config.saqula.home.develop.helix;
+  cfg = config.saqula.home.editor.helix;
   repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
-  helixConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/helix/config";
+  helixConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/helix/config";
 in {
-  options.saqula.home.develop.helix.enable = lib.mkEnableOption "helix editor configuration";
+  options.saqula.home.editor.helix.enable = lib.mkEnableOption "helix editor configuration";
 
   config = lib.mkIf cfg.enable {
     programs.helix.enable = true;

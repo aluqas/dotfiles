@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.cli.media;
+  cfg = config.saqula.home.tools.media;
 in {
-  options.saqula.home.cli.media.enable = lib.mkEnableOption "media tools";
+  options.saqula.home.tools.media.enable = lib.mkEnableOption "media tools";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

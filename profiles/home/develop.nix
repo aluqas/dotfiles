@@ -2,35 +2,39 @@
   imports = [
     ../../modules/home/agent/agent.nix
     ../../modules/home/agent/mcp
-    ../../modules/home/develop/env
-    ../../modules/home/cli/build.nix
-    ../../modules/home/develop/git
-    ../../modules/home/cli/media.nix
-    ../../modules/home/cli/modern.nix
-    ../../modules/home/cli/observability.nix
-    ../../modules/home/cli/system.nix
-    ../../modules/home/develop/helix
-    ../../modules/home/develop/neovim
-    ../../modules/home/develop/zellij
-    ../../modules/home/develop/tmux.nix
+    ../../modules/home/dev/env
+    ../../modules/home/tools/build.nix
+    ../../modules/home/dev/git
+    ../../modules/home/tools/media.nix
+    ../../modules/home/tools/modern.nix
+    ../../modules/home/tools/observability.nix
+    ../../modules/home/tools/system.nix
+    ../../modules/home/editor/helix
+    ../../modules/home/editor/neovim
+    ../../modules/home/terminal/zellij
+    ../../modules/home/terminal/tmux.nix
     ../../modules/home/security/gpg.nix
-    ../../modules/home/develop/fish.nix
-    ../../modules/home/develop/starship
+    ../../modules/home/terminal/fish
+    ../../modules/home/terminal/starship
   ];
 
   # Enable all imported modules
   saqula.home = {
-    develop = {
+    terminal = {
       fish.enable = true;
-      git.enable = true;
-      neovim.enable = true;
-      helix.enable = true;
       tmux.enable = true;
       zellij.enable = true;
       starship.enable = true;
+    };
+    editor = {
+      neovim.enable = true;
+      helix.enable = true;
+    };
+    dev = {
+      git.enable = true;
       env.enable = true;
     };
-    cli = {
+    tools = {
       build.enable = true;
       modern.enable = true;
       observability.enable = true;

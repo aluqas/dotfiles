@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.cli.modern;
+  cfg = config.saqula.home.tools.modern;
 in {
-  options.saqula.home.cli.modern.enable = lib.mkEnableOption "modern CLI tools";
+  options.saqula.home.tools.modern.enable = lib.mkEnableOption "modern CLI tools";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
@@ -37,20 +37,5 @@ in {
       navi
     ];
 
-    programs.fish.shellAliases = {
-      ls = "eza";
-      ll = "eza -la";
-      la = "eza -a";
-      lt = "eza --tree";
-      cat = "bat";
-      find = "fd";
-      grep = "rg";
-      sed = "sd";
-      du = "dust";
-      df = "duf";
-      ps = "procs";
-      top = "btm";
-      diff = "delta";
-    };
   };
 }

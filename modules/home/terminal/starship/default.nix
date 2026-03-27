@@ -4,11 +4,11 @@
   globalVars,
   ...
 }: let
-  cfg = config.saqula.home.develop.starship;
+  cfg = config.saqula.home.terminal.starship;
   repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
-  starshipConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/starship/starship.toml";
+  starshipConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/terminal/starship/starship.toml";
 in {
-  options.saqula.home.develop.starship.enable = lib.mkEnableOption "starship prompt configuration";
+  options.saqula.home.terminal.starship.enable = lib.mkEnableOption "starship prompt configuration";
 
   config = lib.mkIf cfg.enable {
     programs.starship.enable = true;

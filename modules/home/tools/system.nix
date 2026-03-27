@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.cli.system;
+  cfg = config.saqula.home.tools.system;
 in {
-  options.saqula.home.cli.system.enable = lib.mkEnableOption "system utilities";
+  options.saqula.home.tools.system.enable = lib.mkEnableOption "system utilities";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

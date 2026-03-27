@@ -5,11 +5,11 @@
   globalVars,
   ...
 }: let
-  cfg = config.saqula.home.develop.vscode;
+  cfg = config.saqula.home.editor.vscode;
   repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
 
-  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/vscode/settings.json";
-  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/vscode/keybindings.json";
+  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/vscode/settings.json";
+  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/vscode/keybindings.json";
 
   vscodeEditors = {
     cursor = {
@@ -64,7 +64,7 @@
     ) (lib.attrNames vscodeEditors)
   );
 in {
-  options.saqula.home.develop.vscode.enable = lib.mkEnableOption "VSCode/Cursor configuration";
+  options.saqula.home.editor.vscode.enable = lib.mkEnableOption "VSCode/Cursor configuration";
 
   config = lib.mkIf cfg.enable {
     programs.vscode = {

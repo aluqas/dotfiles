@@ -2,10 +2,10 @@
 .DS_Store
 
 # neovim configs are standalone git repos, managed independently
-modules/home/develop/neovim/nvim-lazy/
-modules/home/develop/neovim/kickstart.nvim/
-modules/home/develop/neovim/kickstart-nix.nvim/
-modules/home/develop/neovim/kickstart-modular.nvim/
+modules/home/editor/neovim/nvim-lazy/
+modules/home/editor/neovim/kickstart.nvim/
+modules/home/editor/neovim/kickstart-nix.nvim/
+modules/home/editor/neovim/kickstart-modular.nvim/
 .age-identity
 
 .serena/
