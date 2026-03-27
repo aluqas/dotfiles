@@ -113,7 +113,7 @@
               useUserPackages = true;
               backupFileExtension = "backup";
               extraSpecialArgs = specialArgs;
-              sharedModules = [ inputs.stylix.homeModules.stylix ];
+              sharedModules = [inputs.stylix.homeModules.stylix];
               users.${user} = {
                 imports = def.homeImports;
                 home = {
@@ -159,7 +159,7 @@
               useUserPackages = true;
               backupFileExtension = "backup";
               extraSpecialArgs = specialArgs;
-              sharedModules = [ inputs.stylix.homeModules.stylix ];
+              sharedModules = [inputs.stylix.homeModules.stylix];
               users.${user} = {
                 imports = def.homeImports;
                 home = {

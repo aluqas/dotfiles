@@ -139,9 +139,18 @@ in {
           directories = [
             "/var/lib/nixos"
             "/var/log"
-            {directory = "/var/lib/systemd/coredump"; mode = "0755";}
-            {directory = "/var/lib/systemd/random-seed"; mode = "0755";}
-            {directory = "/var/lib/age"; mode = "0700";}
+            {
+              directory = "/var/lib/systemd/coredump";
+              mode = "0755";
+            }
+            {
+              directory = "/var/lib/systemd/random-seed";
+              mode = "0755";
+            }
+            {
+              directory = "/var/lib/age";
+              mode = "0700";
+            }
             "/etc/NetworkManager/system-connections"
             "/var/lib/docker"
             "/var/lib/acme"

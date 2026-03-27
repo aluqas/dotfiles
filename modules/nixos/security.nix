@@ -29,7 +29,7 @@ in {
     {
       # age identity を永続ストレージに置き、ロールバックや
       # 一時的な root 再構築をまたいでも復号が動くようにする。
-      age.identityPaths = [ "/persist/var/lib/age/keys.txt" ];
+      age.identityPaths = ["/persist/var/lib/age/keys.txt"];
     }
 
     (lib.mkIf config.saqula.secrets.enable {

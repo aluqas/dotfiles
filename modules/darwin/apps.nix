@@ -2,12 +2,10 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.saqula.darwin.apps;
   inherit (lib) mkEnableOption mkIf;
-in
-{
+in {
   options.saqula.darwin.apps.enable = mkEnableOption "Darwin GUI applications and fonts";
 
   config = mkIf cfg.enable {

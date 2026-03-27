@@ -17,14 +17,14 @@ in {
     enableSystemdInitrd = lib.mkOption {
       type = lib.types.bool;
       default = false;
-        description = "initrd で systemd を有効にして起動を速くする";
+      description = "initrd で systemd を有効にして起動を速くする";
     };
 
     kernelSysctl = {
       ipForward = lib.mkOption {
         type = lib.types.bool;
         default = false;
-          description = "IPv4 / IPv6 forwarding を有効にする（subnet router / exit node 用）";
+        description = "IPv4 / IPv6 forwarding を有効にする（subnet router / exit node 用）";
       };
     };
   };

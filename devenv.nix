@@ -10,7 +10,8 @@
     in
       if subdir != ""
       then subdir
-      else builtins.toString ./.);
+      else builtins.toString ./.
+  );
   env.GREET = "Antigravity Nix Environment";
 
   imports = [
@@ -151,7 +152,6 @@
       echo "Flake updated. Run build-mac/build-bootstrap/build-lab to validate host outputs."
     fi
   '';
-  scripts.doctor.exec = "./scripts/doctor.sh";
   scripts.clean.exec = "nh clean all --keep 3";
 
   enterShell = ''

@@ -2,10 +2,7 @@
   "mcpServers": {
     "CodeGraphContext": {
       "command": "/Users/saqula/.local/bin/cgc",
-      "args": [
-        "mcp",
-        "start"
-      ],
+      "args": ["mcp", "start"],
       "env": {
         "DEFAULT_DATABASE": "falkordb",
         "FALKORDB_PATH": "/Users/saqula/.codegraphcontext/falkordb.db",
