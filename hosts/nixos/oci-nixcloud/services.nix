@@ -28,6 +28,10 @@
       portainer = {
         enable = true;
         dockerAgent.enable = true;
+        tailscale = {
+          hostname = "portainer";
+          publicDomain = "fairy-sargas.ts.net";
+        };
       };
     };
 
@@ -45,8 +49,18 @@
           clientSecretFile = config.age.secrets.tailscale-oauth-client-secret.path;
         };
       };
-      argocd.tailscale.enable = true;
-      rancher.tailscale.enable = true;
+      argocd = {
+        ingressHost = "argocd.fairy-sargas.ts.net";
+        nodePorts = {
+          http = 30080;
+          https = 30443;
+        };
+        tailscale.enable = true;
+      };
+      rancher = {
+        publicDomain = "fairy-sargas.ts.net";
+        tailscale.enable = true;
+      };
     };
 
     container = {

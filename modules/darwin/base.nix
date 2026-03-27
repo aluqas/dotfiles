@@ -16,6 +16,8 @@ let
     isDarwin = true;
     inherit (hostVars) username;
   };
+  sshDir = secrets.sshDir;
+  knownHosts = "${sshDir}/known_hosts";
 in
 {
   options.saqula.darwin.base.enable = mkEnableOption "Darwin base configuration";
@@ -288,8 +290,27 @@ in
     };
 
     age.identityPaths = [ "/Users/${hostVars.username}/.config/age/keys.txt" ];
+    age.secrets.id_ed25519_git = secrets.mkSshKey "id_ed25519_git";
+    age.secrets.id_ed25519_emergency = secrets.mkSshKey "id_ed25519_emergency";
+    age.secrets.ssh-config = secrets.mkSshConfig "config.age";
     age.secrets.gpg-secret-subkeys = secrets.mkGpgSecret "gpg-secret-subkeys";
     age.secrets.gpg-ownertrust = secrets.mkGpgSecret "gpg-ownertrust";
+
+    system.activationScripts.ssh-known-hosts.text = ''
+      if [ ! -d "${sshDir}" ]; then
+        mkdir -p "${sshDir}"
+      fi
+
+      chown "${secrets.username}" "${sshDir}"
+      chmod 700 "${sshDir}"
+
+      if [ ! -e "${knownHosts}" ]; then
+        touch "${knownHosts}"
+      fi
+
+      chown "${secrets.username}" "${knownHosts}"
+      chmod 600 "${knownHosts}"
+    '';
 
     saqula.secrets.enable = true;
 

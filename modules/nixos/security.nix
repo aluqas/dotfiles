@@ -14,6 +14,8 @@
   cfg = config.saqula.core.security;
   inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
   secrets = saqulaLib.secrets;
+  sshDir = secrets.sshDir;
+  knownHosts = "${sshDir}/known_hosts";
 in {
   options.saqula.core.security = mkFeatureOptions "NixOS security integrations";
 
@@ -28,12 +30,31 @@ in {
       # age identity を永続ストレージに置き、ロールバックや
       # 一時的な root 再構築をまたいでも復号が動くようにする。
       age.identityPaths = [ "/persist/var/lib/age/keys.txt" ];
+    }
 
-      # SSH keys（Darwin の base.nix と対称になるように定義）
+    (lib.mkIf config.saqula.secrets.enable {
       age.secrets.id_ed25519_git = secrets.mkSshKey "id_ed25519_git";
       age.secrets.id_ed25519_emergency = secrets.mkSshKey "id_ed25519_emergency";
       age.secrets.ssh-config = secrets.mkSshConfig "config.age";
-    }
+      age.secrets.gpg-secret-subkeys = secrets.mkGpgSecret "gpg-secret-subkeys";
+      age.secrets.gpg-ownertrust = secrets.mkGpgSecret "gpg-ownertrust";
+
+      system.activationScripts.ssh-known-hosts.text = ''
+        if [ ! -d "${sshDir}" ]; then
+          mkdir -p "${sshDir}"
+        fi
+
+        chown "${secrets.username}" "${sshDir}"
+        chmod 700 "${sshDir}"
+
+        if [ ! -e "${knownHosts}" ]; then
+          touch "${knownHosts}"
+        fi
+
+        chown "${secrets.username}" "${knownHosts}"
+        chmod 600 "${knownHosts}"
+      '';
+    })
 
     (wrapConfig cfg {
       # =========================================================================

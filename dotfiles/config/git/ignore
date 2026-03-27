@@ -37,3 +37,5 @@ Temporary Items
 
 # TS
 **/.cursor/.agent-tools
+
+**/.claude/settings.local.json

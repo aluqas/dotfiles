@@ -11,6 +11,23 @@
 in {
   # hybrid merge を避けつつ mkFeatureOptionsExt をきれいに使う
   options.saqula.system.services.k3s.argocd = mkFeatureOptionsExt "Argo CD GitOps" {
+    ingressHost = mkOption {
+      type = types.str;
+      default = "argocd.fairy-sargas.ts.net";
+      description = "Tailscale Ingress で公開する ArgoCD のホスト名";
+    };
+    nodePorts = {
+      http = mkOption {
+        type = types.port;
+        default = 30080;
+        description = "ArgoCD HTTP の NodePort";
+      };
+      https = mkOption {
+        type = types.port;
+        default = 30443;
+        description = "ArgoCD HTTPS の NodePort";
+      };
+    };
     tailscale = {
       enable = lib.mkEnableOption "ArgoCD を Tailscale Serve で公開する";
       port = mkOption {
@@ -36,7 +53,10 @@ in {
       ];
 
       # firewall port を開く
-      networking.firewall.allowedTCPPorts = [30080 30443];
+      networking.firewall.allowedTCPPorts = [
+        cfg.nodePorts.http
+        cfg.nodePorts.https
+      ];
 
       # Helm で Argo CD を install する oneshot service
       systemd.services.argocd-setup-v2 = {
@@ -87,8 +107,8 @@ in {
           # NodePort にパッチする（Service から Tailscale annotation を除く）
           kubectl patch svc argocd-server -n argocd --type='json' -p='[
             {"op": "replace", "path": "/spec/type", "value": "NodePort"},
-            {"op": "replace", "path": "/spec/ports/0/nodePort", "value": 30080},
-            {"op": "replace", "path": "/spec/ports/1/nodePort", "value": 30443}
+            {"op": "replace", "path": "/spec/ports/0/nodePort", "value": ${toString cfg.nodePorts.http}},
+            {"op": "replace", "path": "/spec/ports/1/nodePort", "value": ${toString cfg.nodePorts.https}}
           ]'
 
           # Tailscale が有効なら Ingress を適用する
@@ -105,9 +125,9 @@ in {
               ingressClassName: tailscale
               tls:
               - hosts:
-                - argocd.fairy-sargas.ts.net
+                - ${cfg.ingressHost}
               rules:
-              - host: argocd.fairy-sargas.ts.net
+              - host: ${cfg.ingressHost}
                 http:
                   paths:
                   - path: /
@@ -122,7 +142,7 @@ in {
 
           # 初期 admin password を取得する
           echo "Argo CD installed!"
-          echo "Access at: https://localhost:30443"
+          echo "Access at: https://localhost:${toString cfg.nodePorts.https}"
           echo "Username: admin"
           echo "Password: $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)"
         '';
@@ -163,7 +183,7 @@ in {
           done
 
           echo "Exposing ArgoCD on HTTPS :${toString cfg.tailscale.port}"
-          tailscale serve --bg --yes --https ${toString cfg.tailscale.port} https+insecure://127.0.0.1:30443
+          tailscale serve --bg --yes --https ${toString cfg.tailscale.port} https+insecure://127.0.0.1:${toString cfg.nodePorts.https}
         '';
 
         serviceConfig = {

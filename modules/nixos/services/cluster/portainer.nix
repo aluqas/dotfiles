@@ -39,6 +39,11 @@ in {
         default = "portainer";
         description = "Tailscale hostname for Portainer";
       };
+      publicDomain = mkOption {
+        type = types.str;
+        default = "fairy-sargas.ts.net";
+        description = "Portainer 公開に使うベースドメイン";
+      };
     };
 
     # K3s Agent の配置
@@ -177,7 +182,7 @@ in {
           podman exec portainer-tailscale tailscale serve --bg --https=443 http://127.0.0.1:9000
 
           echo "Tailscale serve configured for Portainer"
-          echo "Access at: https://${cfg.tailscale.hostname}.fairy-sargas.ts.net"
+          echo "Access at: https://${cfg.tailscale.hostname}.${cfg.tailscale.publicDomain}"
         '';
 
         serviceConfig = {

@@ -46,8 +46,9 @@ doctor
 clean
 ```
 
-この repo では raw な `nixos-rebuild` は使わず、`nh` または `devenv` のスクリプトを使う運用です。
+`build-lab` は `oci-nixcloud` 用です。Darwin 上では `aarch64-linux` の dry-run build が失敗するため、スクリプトは自動的に eval のみ実行します。
 
+この repo では raw な `nixos-rebuild` は使わず、`nh` または `devenv` のスクリプトを使う運用です。
 
 ## まずどこを見るか
 
@@ -71,6 +72,27 @@ clean
 - テーマや配色を変えたい: `homes/saqula/stylix.nix` と `dotfiles/stylix/*`
 - secret を追加したい: `secrets/*.age`, `secrets/secrets.nix`, `lib/secrets.nix`, `lib/keys.nix`
 - deploy や bootstrap 手順を変えたい: `ops/*` または `scripts/*`
+
+## 境界の判断フロー（1分版）
+
+変更を置く場所は、次の順番で決めます。
+
+1. **契約か?**  
+   複数 module で共通の option / type を定義するなら `modules/shared/*`
+2. **実装か?**  
+   再利用可能な実装なら `modules/darwin/*` / `modules/nixos/*` / `modules/home/*`
+3. **合成か?**  
+   shared user env や policy の束ねなら `homes/*` または `profiles/*`
+4. **具現化か?**  
+   machine-specific な最終調整なら `hosts/*`
+
+`shared` に寄せるか迷う場合は、次を満たすときだけ寄せます。
+
+- 複数 host / platform で同じ contract を使う
+- host 固有値（IP, device, provider依存）を含まない
+- 実装本体ではなく契約として切り出せる
+
+詳細な判断基準とアンチパターンは [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) を参照してください。
 
 ## dotfiles の反映方針
 

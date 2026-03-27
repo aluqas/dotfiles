@@ -121,7 +121,18 @@
   scripts."switch-mac".exec = "nh darwin switch . -H macbook";
   #scripts."build-bootstrap".exec = "nix build --dry-run .#nixosConfigurations.nixos-bootstrap.config.system.build.toplevel --no-link";
   #scripts."switch-bootstrap".exec = "nh os switch . -H nixos-bootstrap";
-  scripts."build-lab".exec = "nix build --dry-run .#nixosConfigurations.oci-nixcloud.config.system.build.toplevel --no-link";
+  scripts."build-lab".exec = ''
+    set -euo pipefail
+
+    target=".#nixosConfigurations.oci-nixcloud.config.system.build.toplevel"
+    if [ "$(uname -s)" = "Darwin" ]; then
+      # Darwin では Linux derivation をローカルに dry-run build できないため、評価のみ行う
+      nix eval --raw "$target.drvPath" > /dev/null
+      echo "Evaluated $target"
+    else
+      nix build --dry-run "$target" --no-link
+    fi
+  '';
   scripts."switch-lab".exec = "nh os switch . -H oci-nixcloud";
   scripts."deploy-lab-dry".exec = "nix run .#deploy-rs -- --dry-activate --remote-build .#oci-nixcloud";
   scripts."deploy-lab".exec = "nix run .#deploy-rs -- --remote-build .#oci-nixcloud";
