@@ -1,6 +1,7 @@
-{...}: {
+{ ... }:
+{
   imports = [
-    ../../modules/home/infra/tooling.nix
+    ../../modules/home/tooling.nix
   ];
 
   saqula.home.infra.tooling.enable = true;

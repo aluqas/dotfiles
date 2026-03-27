@@ -3,13 +3,15 @@
   lib,
   repoRoot,
   ...
-}: let
+}:
+let
   cfg = config.saqula.home.darwin.spicetify;
-in {
+in
+{
   options.saqula.home.darwin.spicetify.enable = lib.mkEnableOption "spicetify configuration";
 
   config = lib.mkIf cfg.enable {
     home.file.".config/spicetify".source =
-      config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/darwin/spicetify/config";
+      config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/spicetify";
   };
 }

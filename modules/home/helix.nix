@@ -12,9 +12,9 @@ in
   config = lib.mkIf cfg.enable {
     programs.helix = {
       enable = true;
-      settings = builtins.fromTOML (builtins.readFile ./config/config.toml);
+      settings = builtins.fromTOML (builtins.readFile ./helix/config.toml);
     };
 
-    xdg.configFile."helix/languages.toml".text = builtins.readFile ./config/languages.toml;
+    xdg.configFile."helix/languages.toml".text = builtins.readFile ./helix/languages.toml;
   };
 }

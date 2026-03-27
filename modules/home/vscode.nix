@@ -4,11 +4,12 @@
   pkgs,
   repoRoot,
   ...
-}: let
+}:
+let
   cfg = config.saqula.home.editor.vscode;
 
-  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/vscode/settings.json";
-  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/vscode/keybindings.json";
+  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/vscode/settings.json";
+  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/vscode/keybindings.json";
 
   vscodeEditors = {
     cursor = {
@@ -31,9 +32,11 @@
 
   linuxConfigs = builtins.listToAttrs (
     lib.concatMap (
-      name: let
+      name:
+      let
         dir = vscodeEditors.${name}.linux;
-      in [
+      in
+      [
         {
           name = "${dir}/User/settings.json";
           value.source = vscodeSettingsPath;
@@ -48,9 +51,11 @@
 
   darwinConfigs = builtins.listToAttrs (
     lib.concatMap (
-      name: let
+      name:
+      let
         dir = vscodeEditors.${name}.darwin;
-      in [
+      in
+      [
         {
           name = "Library/Application Support/${dir}/User/settings.json";
           value.source = vscodeSettingsPath;
@@ -62,7 +67,8 @@
       ]
     ) (lib.attrNames vscodeEditors)
   );
-in {
+in
+{
   options.saqula.home.editor.vscode.enable = lib.mkEnableOption "VSCode/Cursor configuration";
 
   config = lib.mkIf cfg.enable {

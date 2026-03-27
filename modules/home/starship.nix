@@ -12,7 +12,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.starship = {
       enable = true;
-      settings = builtins.fromTOML (builtins.readFile ./starship.toml);
+      settings = builtins.fromTOML (builtins.readFile ./starship/starship.toml);
     };
   };
 }

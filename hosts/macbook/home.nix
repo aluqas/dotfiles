@@ -1,8 +1,9 @@
-{...}: {
+{ ... }:
+{
   imports = [
-    ../../modules/home/terminal/alacritty
-    ../../modules/home/editor/vscode
-    ../../modules/home/darwin/spicetify
+    ../../modules/home/alacritty.nix
+    ../../modules/home/vscode.nix
+    ../../modules/home/spicetify.nix
   ];
 
   saqula.home.terminal.alacritty.enable = true;

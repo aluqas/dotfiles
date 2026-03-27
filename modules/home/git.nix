@@ -92,6 +92,6 @@ in
       spinner: enabled
     '';
 
-    xdg.configFile."git/message".text = builtins.readFile ./config/message;
+    xdg.configFile."git/message".text = builtins.readFile ./git/.gitmessage;
   };
 }

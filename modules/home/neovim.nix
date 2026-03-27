@@ -3,10 +3,12 @@
   lib,
   repoRoot,
   ...
-}: let
+}:
+let
   cfg = config.saqula.home.editor.neovim;
-  neovimConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/neovim/nvim-lazy";
-in {
+  neovimConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/neovim/nvim-lazy";
+in
+{
   options.saqula.home.editor.neovim.enable = lib.mkEnableOption "neovim configuration";
 
   config = lib.mkIf cfg.enable {
