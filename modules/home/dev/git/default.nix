@@ -2,11 +2,10 @@
   config,
   lib,
   pkgs,
-  globalVars,
+  repoRoot,
   ...
 }: let
   cfg = config.saqula.home.dev.git;
-  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
   gitConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/dev/git/config";
   ghConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/dev/git/gh/config.yml";
 in {

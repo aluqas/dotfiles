@@ -100,9 +100,21 @@
       };
 
       flake = let
+        globalVars = {
+          defaultUser = "saqula";
+          defaultTimezone = "Asia/Tokyo";
+          defaultLocale = "en_US.UTF-8";
+          checkoutDirName = "dotfiles";
+          stateVersions = {
+            home = "24.11";
+            nixos = "25.05";
+            darwin = 6;
+          };
+        };
+
         hostLib = import ./lib/hosts.nix {
           inherit (nixpkgs) lib;
-          inherit inputs;
+          inherit inputs globalVars;
         };
 
         hostDefinitions = {

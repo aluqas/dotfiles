@@ -1,11 +1,10 @@
 {
   config,
   lib,
-  globalVars,
+  repoRoot,
   ...
 }: let
   cfg = config.saqula.home.darwin.spicetify;
-  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
 in {
   options.saqula.home.darwin.spicetify.enable = lib.mkEnableOption "spicetify configuration";
 

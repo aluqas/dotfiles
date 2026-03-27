@@ -18,8 +18,8 @@
   # authorized_keys 用のブートストラップ / 緊急用鍵。
   # ホスト起動後の通常のリモート管理は Tailscale を想定する。
   # 利用可能な鍵: ssh.git, ssh.emergency, ssh.general (legacy)
-  # 定義元: lib/keys.nix
-  sshKey = (import ../../../lib/keys.nix {}).ssh.emergency;
+  # 定義元: lib/secrets.nix
+  sshKey = (import ../../../lib/secrets.nix {}).keys.ssh.emergency;
 
   # 任意: locale / timezone を調整する
   locale = "en_US.UTF-8";

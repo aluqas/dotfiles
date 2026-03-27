@@ -1,7 +1,7 @@
 # このファイルは、どの鍵で各 secret を復号できるかを定義する
 # agenix / ragenix の secret 管理に使う
 let
-  keys = import ../lib/keys.nix {};
+  keys = (import ../lib/secrets.nix {}).keys;
 
   # secret を復号できるようにする鍵の一覧
   allKeys = [keys.age.saqula];

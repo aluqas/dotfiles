@@ -1,11 +1,10 @@
 {
   config,
   lib,
-  globalVars,
+  repoRoot,
   ...
 }: let
   cfg = config.saqula.home.editor.helix;
-  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
   helixConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/helix/config";
 in {
   options.saqula.home.editor.helix.enable = lib.mkEnableOption "helix editor configuration";

@@ -1,11 +1,10 @@
 {
   config,
   lib,
-  globalVars,
+  repoRoot,
   ...
 }: let
   cfg = config.saqula.home.editor.neovim;
-  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
   neovimConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/neovim/nvim-lazy";
 in {
   options.saqula.home.editor.neovim.enable = lib.mkEnableOption "neovim configuration";

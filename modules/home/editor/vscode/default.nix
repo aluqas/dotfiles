@@ -2,11 +2,10 @@
   config,
   lib,
   pkgs,
-  globalVars,
+  repoRoot,
   ...
 }: let
   cfg = config.saqula.home.editor.vscode;
-  repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
 
   vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/vscode/settings.json";
   vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/editor/vscode/keybindings.json";
