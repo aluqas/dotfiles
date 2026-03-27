@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.terminal.zellij;
+  cfg = config.saqula.home.zellij;
 in {
-  options.saqula.home.terminal.zellij.enable = lib.mkEnableOption "zellij configuration";
+  options.saqula.home.zellij.enable = lib.mkEnableOption "zellij configuration";
 
   config = lib.mkIf cfg.enable {
     programs.zellij = {

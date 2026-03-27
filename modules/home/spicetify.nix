@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.saqula.home.darwin.spicetify;
+  cfg = config.saqula.home.spicetify;
 in
 {
-  options.saqula.home.darwin.spicetify.enable = lib.mkEnableOption "spicetify configuration";
+  options.saqula.home.spicetify.enable = lib.mkEnableOption "spicetify configuration";
 
   config = lib.mkIf cfg.enable {
     home.file.".config/spicetify".source =

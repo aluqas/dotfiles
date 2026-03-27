@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.infra.tooling;
+  cfg = config.saqula.home.tooling;
 in {
-  options.saqula.home.infra.tooling.enable = lib.mkEnableOption "infrastructure tooling";
+  options.saqula.home.tooling.enable = lib.mkEnableOption "infrastructure tooling";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs;

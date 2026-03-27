@@ -4,14 +4,14 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.security.gpg;
+  cfg = config.saqula.home.gpg;
 
   pinentryPath =
     if pkgs.stdenv.isDarwin
     then "${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac"
     else "${pkgs.pinentry-curses}/bin/pinentry-curses";
 in {
-  options.saqula.home.security.gpg.enable = lib.mkEnableOption "GPG configuration";
+  options.saqula.home.gpg.enable = lib.mkEnableOption "GPG configuration";
 
   config = lib.mkIf cfg.enable {
     home.packages = [

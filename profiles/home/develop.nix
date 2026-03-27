@@ -21,31 +21,25 @@
 
   # Enable all imported modules
   saqula.home = {
-    terminal = {
-      fish.enable = true;
-      tmux.enable = true;
-      zellij.enable = true;
-      starship.enable = true;
-    };
-    editor = {
-      neovim.enable = true;
-      helix.enable = true;
-    };
-    dev = {
-      git.enable = true;
-      env.enable = true;
-    };
-    tools = {
-      build.enable = true;
-      modern.enable = true;
-      observability.enable = true;
-      system.enable = true;
-      media.enable = true;
-    };
-    agent = {
-      agent.enable = true;
-      mcp.enable = true;
-    };
-    security.gpg.enable = true;
+    fish.enable = true;
+    tmux.enable = true;
+    zellij.enable = true;
+    starship.enable = true;
+
+    neovim.enable = true;
+    helix.enable = true;
+
+    git.enable = true;
+    env.enable = true;
+
+    build.enable = true;
+    modern.enable = true;
+    observability.enable = true;
+    system.enable = true;
+    media.enable = true;
+
+    agent.enable = true;
+    mcp.enable = true;
+    gpg.enable = true;
   };
 }

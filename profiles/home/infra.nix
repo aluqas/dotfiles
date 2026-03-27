@@ -4,5 +4,5 @@
     ../../modules/home/tooling.nix
   ];
 
-  saqula.home.infra.tooling.enable = true;
+  saqula.home.tooling.enable = true;
 }

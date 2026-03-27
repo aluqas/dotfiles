@@ -3,9 +3,9 @@
   lib,
   ...
 }: let
-  cfg = config.saqula.home.terminal.fish;
+  cfg = config.saqula.home.fish;
 in {
-  options.saqula.home.terminal.fish.enable = lib.mkEnableOption "fish shell configuration";
+  options.saqula.home.fish.enable = lib.mkEnableOption "fish shell configuration";
 
   config = lib.mkIf cfg.enable {
     programs.fish = {

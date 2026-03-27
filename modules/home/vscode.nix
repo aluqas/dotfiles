@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.saqula.home.editor.vscode;
+  cfg = config.saqula.home.vscode;
 
   vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/vscode/settings.json";
   vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/vscode/keybindings.json";
@@ -69,7 +69,7 @@ let
   );
 in
 {
-  options.saqula.home.editor.vscode.enable = lib.mkEnableOption "VSCode/Cursor configuration";
+  options.saqula.home.vscode.enable = lib.mkEnableOption "VSCode/Cursor configuration";
 
   config = lib.mkIf cfg.enable {
     programs.vscode = {

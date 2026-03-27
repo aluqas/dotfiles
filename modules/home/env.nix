@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.saqula.home.dev.env;
+  cfg = config.saqula.home.env;
 in
 {
-  options.saqula.home.dev.env.enable = lib.mkEnableOption "development environment tools";
+  options.saqula.home.env.enable = lib.mkEnableOption "development environment tools";
 
   config = lib.mkIf cfg.enable {
     programs.direnv = {

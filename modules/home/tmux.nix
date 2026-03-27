@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.terminal.tmux;
+  cfg = config.saqula.home.tmux;
 in {
-  options.saqula.home.terminal.tmux.enable = lib.mkEnableOption "tmux configuration";
+  options.saqula.home.tmux.enable = lib.mkEnableOption "tmux configuration";
 
   config = lib.mkIf cfg.enable {
     programs.tmux = {

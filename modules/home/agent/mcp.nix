@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.saqula.home.agent.mcp;
+  cfg = config.saqula.home.mcp;
 
   mcpServersPath = "${inputs.self}/modules/home/agent/mcp/mcpservers.json";
   mcpServers =
@@ -31,7 +31,7 @@ let
   cursorMcpConfig = { inherit (mcpServers) mcpServers; };
 in
 {
-  options.saqula.home.agent.mcp.enable = lib.mkEnableOption "MCP server configurations";
+  options.saqula.home.mcp.enable = lib.mkEnableOption "MCP server configurations";
 
   config = lib.mkIf cfg.enable {
     home.file = {

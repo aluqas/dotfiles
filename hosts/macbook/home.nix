@@ -6,7 +6,7 @@
     ../../modules/home/spicetify.nix
   ];
 
-  saqula.home.terminal.alacritty.enable = true;
-  saqula.home.editor.vscode.enable = true;
-  saqula.home.darwin.spicetify.enable = true;
+  saqula.home.alacritty.enable = true;
+  saqula.home.vscode.enable = true;
+  saqula.home.spicetify.enable = true;
 }

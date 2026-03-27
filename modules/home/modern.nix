@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.tools.modern;
+  cfg = config.saqula.home.modern;
 in {
-  options.saqula.home.tools.modern.enable = lib.mkEnableOption "modern CLI tools";
+  options.saqula.home.modern.enable = lib.mkEnableOption "modern CLI tools";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

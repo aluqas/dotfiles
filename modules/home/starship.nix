@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.saqula.home.terminal.starship;
+  cfg = config.saqula.home.starship;
 in
 {
-  options.saqula.home.terminal.starship.enable = lib.mkEnableOption "starship prompt configuration";
+  options.saqula.home.starship.enable = lib.mkEnableOption "starship prompt configuration";
 
   config = lib.mkIf cfg.enable {
     programs.starship = {

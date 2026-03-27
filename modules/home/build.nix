@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.saqula.home.tools.build;
+  cfg = config.saqula.home.build;
 in {
-  options.saqula.home.tools.build.enable = lib.mkEnableOption "build tools";
+  options.saqula.home.build.enable = lib.mkEnableOption "build tools";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

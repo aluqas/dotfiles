@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.saqula.home.dev.git;
+  cfg = config.saqula.home.git;
 in
 {
-  options.saqula.home.dev.git.enable = lib.mkEnableOption "git configuration";
+  options.saqula.home.git.enable = lib.mkEnableOption "git configuration";
 
   config = lib.mkIf cfg.enable {
     programs.git = {
