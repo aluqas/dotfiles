@@ -119,7 +119,9 @@
                 home = {
                   username = lib.mkDefault user;
                   homeDirectory = lib.mkForce "/Users/${user}";
+                  stateVersion = globalVars.stateVersions.home;
                 };
+                programs.home-manager.enable = true;
               };
             };
           }
@@ -163,7 +165,9 @@
                 home = {
                   username = lib.mkDefault user;
                   homeDirectory = lib.mkDefault "/home/${user}";
+                  stateVersion = globalVars.stateVersions.home;
                 };
+                programs.home-manager.enable = true;
               };
             };
           }

@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ../../../profiles/system/nixos-server.nix
+    ../../profiles/system/nixos-server.nix
     ./hardware-configuration.nix
     ./disk-config.nix
   ];

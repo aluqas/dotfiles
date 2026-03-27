@@ -23,7 +23,7 @@ The core rule is:
   - It injects shared modules, Home Manager, Stylix, ragenix, and other common platform wiring.
   - It passes `inputs`, `hostVars`, `globalVars`, `paths`, and `saqulaLib` through `specialArgs`.
 - `hosts/*/default.nix` provides host-specific last-mile configuration.
-- `homeImports` from `flake.nix` determine how `homes/saqula/*` and `profiles/home/*` are attached to each user environment.
+- `homeImports` from `flake.nix` determine how `profiles/home/*` and `hosts/*/home.nix` are attached to each user environment.
 
 When deciding where to place logic, preserve this flow instead of bypassing it.
 
@@ -61,12 +61,6 @@ When deciding where to place logic, preserve this flow instead of bypassing it.
 - Profiles set defaults and policy.
 - Do not reintroduce role frameworks or option-toggle namespaces as an abstraction layer.
 
-### `homes/*`
-
-- `homes/saqula/*` is the canonical shared user environment.
-- Shared developer UX should flow through this layer before host-specific overrides.
-- Keep host-only user overrides small and explicit.
-
 ### `hosts/*`
 
 - Hosts should stay thin.
@@ -92,8 +86,8 @@ When deciding where to place logic, preserve this flow instead of bypassing it.
 
 - Stylix is the shared theming system.
 - The actual host wiring is injected from `lib/hosts.nix`.
-- Shared theme policy belongs in `homes/saqula/stylix.nix`.
-- Theme assets belong under `homes/saqula/stylix/*`.
+- Shared theme policy belongs in `profiles/home/stylix/default.nix`.
+- Theme assets belong under `profiles/home/stylix/*`.
 - Do not duplicate theme policy in each host unless the override is truly machine-specific.
 
 ### Secrets
@@ -107,7 +101,7 @@ When deciding where to place logic, preserve this flow instead of bypassing it.
 Before submitting changes, ask:
 
 1. Is this reusable implementation, composition policy, user environment, or host-specific last-mile config?
-2. Am I expressing shared developer UX through `homes/saqula/*` instead of ad hoc host config?
+2. Am I using `profiles/home/*` for shared UX and `hosts/*/home.nix` for host-specific home config?
 3. Did I keep assembly logic in `lib/hosts.nix` and not leak it into unrelated files?
 4. Did I avoid introducing a new wrapper option when native HM/NixOS options are enough?
 5. If the change touches theming or secrets, did I update the shared Stylix / secrets wiring rather than hardcoding per-host drift?

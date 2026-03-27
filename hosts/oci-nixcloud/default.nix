@@ -6,8 +6,8 @@
   ...
 }: {
   imports = [
-    ../../../profiles/system/nixos-server.nix
-    ../../../profiles/system/nixos-oci-node.nix
+    ../../profiles/system/nixos-server.nix
+    ../../profiles/system/nixos-oci-node.nix
     ./hardware-configuration.nix
     ./disk-config.nix
     ./services.nix

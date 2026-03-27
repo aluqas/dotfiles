@@ -110,11 +110,11 @@
           darwin = {
             macbook = {
               system = "aarch64-darwin";
-              hostPath = ./hosts/darwin/macbook;
+              hostPath = ./hosts/macbook;
               homeImports = [
-                ./homes/saqula/default.nix
+                ./profiles/home/stylix
                 ./profiles/home/develop.nix
-                ./homes/saqula/platform/darwin.nix
+                ./hosts/macbook/home.nix
               ];
             };
           };
@@ -122,18 +122,18 @@
           nixos = {
             nixos-bootstrap = {
               system = "aarch64-linux";
-              hostPath = ./hosts/nixos/nixos-bootstrap;
+              hostPath = ./hosts/nixos-bootstrap;
               homeImports = [
-                ./homes/saqula/default.nix
+                ./profiles/home/stylix
                 ./profiles/home/develop.nix
               ];
             };
 
             oci-nixcloud = {
               system = "aarch64-linux";
-              hostPath = ./hosts/nixos/oci-nixcloud;
+              hostPath = ./hosts/oci-nixcloud;
               homeImports = [
-                ./homes/saqula/default.nix
+                ./profiles/home/stylix
                 ./profiles/home/develop.nix
                 ./profiles/home/infra.nix
               ];

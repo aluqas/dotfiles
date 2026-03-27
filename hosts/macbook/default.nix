@@ -1,6 +1,6 @@
 {hostVars, ...}: {
   imports = [
-    ../../../profiles/system/darwin-workstation.nix
+    ../../profiles/system/darwin-workstation.nix
   ];
 
   networking.hostName = hostVars.hostname;

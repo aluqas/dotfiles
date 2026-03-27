@@ -1,8 +1,11 @@
 /result
 .DS_Store
 
-# nvim-lazy is a standalone git repo (LazyVim/starter), managed independently
+# neovim configs are standalone git repos, managed independently
 modules/home/develop/neovim/nvim-lazy/
+modules/home/develop/neovim/kickstart.nvim/
+modules/home/develop/neovim/kickstart-nix.nvim/
+modules/home/develop/neovim/kickstart-modular.nvim/
 .age-identity
 
 .serena/
