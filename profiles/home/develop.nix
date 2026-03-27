@@ -1,21 +1,21 @@
 {...}: {
   imports = [
     ../../modules/home/agent/agent.nix
-    ../../modules/home/agent/mcp.nix
-    ../../modules/home/develop/env.nix
+    ../../modules/home/agent/mcp
+    ../../modules/home/develop/env
     ../../modules/home/cli/build.nix
-    ../../modules/home/develop/git.nix
+    ../../modules/home/develop/git
     ../../modules/home/cli/media.nix
     ../../modules/home/cli/modern.nix
     ../../modules/home/cli/observability.nix
     ../../modules/home/cli/system.nix
-    ../../modules/home/develop/helix.nix
-    ../../modules/home/develop/neovim.nix
-    ../../modules/home/develop/zellij.nix
+    ../../modules/home/develop/helix
+    ../../modules/home/develop/neovim
+    ../../modules/home/develop/zellij
     ../../modules/home/develop/tmux.nix
     ../../modules/home/security/gpg.nix
     ../../modules/home/develop/fish.nix
-    ../../modules/home/develop/starship.nix
+    ../../modules/home/develop/starship
   ];
 
   # Enable all imported modules

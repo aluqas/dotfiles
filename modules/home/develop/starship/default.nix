@@ -6,7 +6,7 @@
 }: let
   cfg = config.saqula.home.develop.starship;
   repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
-  starshipConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/starship.toml";
+  starshipConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/starship/starship.toml";
 in {
   options.saqula.home.develop.starship.enable = lib.mkEnableOption "starship prompt configuration";
 

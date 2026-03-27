@@ -2,7 +2,7 @@
   stylix = {
     enable = true;
     autoEnable = false;
-    base16Scheme = "${inputs.self}/dotfiles/stylix/rose-pine-moon.yaml";
+    base16Scheme = "${inputs.self}/homes/saqula/stylix/rose-pine-moon.yaml";
 
     targets = {
       alacritty = {

@@ -4,11 +4,11 @@
   ...
 }: {
   home.file.".config/spicetify".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/${globalVars.checkoutDirName}/dotfiles/config/spicetify";
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/${globalVars.checkoutDirName}/homes/saqula/platform/spicetify";
 
   imports = [
-    ../../../modules/home/develop/alacritty.nix
-    ../../../modules/home/develop/vscode.nix
+    ../../../modules/home/develop/alacritty
+    ../../../modules/home/develop/vscode
   ];
 
   saqula.home.develop = {

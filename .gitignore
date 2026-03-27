@@ -1,5 +1,8 @@
 /result
 .DS_Store
+
+# nvim-lazy is a standalone git repo (LazyVim/starter), managed independently
+modules/home/develop/neovim/nvim-lazy/
 .age-identity
 
 .serena/

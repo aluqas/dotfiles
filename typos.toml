@@ -16,7 +16,7 @@ extend-exclude = [
   "public-keys/*",
   "secrets/*",
   # 表示上の override ファイル（binary plist data）
-  "dotfiles/Library/Displays/*",
+  "homes/saqula/platform/Library/Displays/*",
   # ローカル macOS defaults dump
   "defaults.plist",
   # lock ファイル
@@ -24,10 +24,10 @@ extend-exclude = [
   "*.lock",
   "*-lock.json",
   # 意図的に特殊な綴りを含む可能性がある config ファイル
-  "dotfiles/config/helix/*",
-  "dotfiles/config/nvim*/*",
+  "modules/home/develop/helix/*",
+  "modules/home/develop/neovim/*",
   # typos に見える変数名を含む minified JS
-  "dotfiles/config/spicetify/*",
+  "homes/saqula/platform/spicetify/*",
 ]
 
 [default.extend-words]

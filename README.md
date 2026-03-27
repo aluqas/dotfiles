@@ -68,8 +68,8 @@ clean
 - 複数 host で共有する方針を足したい: `profiles/system/*`
 - 共有 user tooling を足したい: `modules/home/*` を実装し、`homes/saqula/*` または `profiles/home/*` で束ねる
 - 特定 host だけを調整したい: `hosts/*`
-- 実際の dotfiles を変えたい: `dotfiles/*`
-- テーマや配色を変えたい: `homes/saqula/stylix.nix` と `dotfiles/stylix/*`
+- 実際の dotfiles を変えたい: `modules/home/*` 内の対応モジュールディレクトリ
+- テーマや配色を変えたい: `homes/saqula/stylix/` と `homes/saqula/stylix/rose-pine-moon.yaml`
 - secret を追加したい: `secrets/*.age`, `secrets/secrets.nix`, `lib/secrets.nix`, `lib/keys.nix`
 - deploy や bootstrap 手順を変えたい: `ops/*` または `scripts/*`
 
@@ -114,9 +114,9 @@ clean
 - input の取り込み: [`flake.nix`](./flake.nix)
 - host への注入: [`lib/hosts.nix`](./lib/hosts.nix)
 - shared Home Manager 設定: [`homes/saqula/stylix.nix`](./homes/saqula/stylix.nix)
-- theme asset: [`dotfiles/stylix`](./dotfiles/stylix)
+- theme asset: [`homes/saqula/stylix/rose-pine-moon.yaml`](./homes/saqula/stylix/rose-pine-moon.yaml)
 
-共通テーマはまず shared home 側へ寄せ、アプリ固有の細かい調整は `modules/home/*` または `dotfiles/*` で吸収します。
+共通テーマはまず shared home 側へ寄せ、アプリ固有の細かい調整は `modules/home/*` で吸収します。
 
 ### Secrets / age / ragenix
 

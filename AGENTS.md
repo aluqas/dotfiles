@@ -93,7 +93,7 @@ When deciding where to place logic, preserve this flow instead of bypassing it.
 - Stylix is the shared theming system.
 - The actual host wiring is injected from `lib/hosts.nix`.
 - Shared theme policy belongs in `homes/saqula/stylix.nix`.
-- Theme assets belong under `dotfiles/stylix/*`.
+- Theme assets belong under `homes/saqula/stylix/*`.
 - Do not duplicate theme policy in each host unless the override is truly machine-specific.
 
 ### Secrets

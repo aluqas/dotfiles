@@ -7,8 +7,8 @@
 }: let
   cfg = config.saqula.home.develop.git;
   repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
-  gitConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/git";
-  ghConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/gh/config.yml";
+  gitConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/git/config";
+  ghConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/git/gh/config.yml";
 in {
   options.saqula.home.develop.git.enable = lib.mkEnableOption "git configuration";
 

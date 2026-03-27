@@ -8,8 +8,8 @@
   cfg = config.saqula.home.develop.vscode;
   repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
 
-  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/vscode/settings.json";
-  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/vscode/keybindings.json";
+  vscodeSettingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/vscode/settings.json";
+  vscodeKeybindingsPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/vscode/keybindings.json";
 
   vscodeEditors = {
     cursor = {

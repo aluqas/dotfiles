@@ -7,7 +7,7 @@
 }: let
   cfg = config.saqula.home.develop.env;
   repoRoot = "${config.home.homeDirectory}/${globalVars.checkoutDirName}";
-  miseConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/config/mise";
+  miseConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/develop/env/mise";
 in {
   options.saqula.home.develop.env.enable = lib.mkEnableOption "development environment tools";
 

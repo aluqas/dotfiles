@@ -7,7 +7,7 @@
 }: let
   cfg = config.saqula.home.agent.mcp;
 
-  mcpServersPath = "${inputs.self}/dotfiles/mcpservers.json";
+  mcpServersPath = "${inputs.self}/modules/home/agent/mcp/mcpservers.json";
   mcpServers =
     if builtins.pathExists mcpServersPath
     then builtins.fromJSON (builtins.readFile mcpServersPath)
