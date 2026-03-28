@@ -1,11 +1,15 @@
 {
   config,
+  globalVars,
+  hostVars,
   lib,
   pkgs,
   ...
 }: let
   cfg = config.saqula.darwin.apps;
   inherit (lib) mkEnableOption mkIf;
+  homeUser = hostVars.username or globalVars.defaultUser;
+  darwinFontCasks = lib.attrByPath ["home-manager" "users" homeUser "saqula" "home" "fonts" "darwinBrewCasks"] [] config;
 in {
   options.saqula.darwin.apps.enable = mkEnableOption "Darwin GUI applications";
 
@@ -26,11 +30,11 @@ in {
       enable = true;
       onActivation = {
         cleanup = "zap";
-        autoUpdate = false;
+        autoUpdate = true;
         upgrade = false;
       };
 
-      casks = [
+      casks = darwinFontCasks ++ [
         # ブラウザ
         "arc"
         "zen"
@@ -99,7 +103,10 @@ in {
 
         "alacritty"
         "ghostty"
+
+        "antigravity"
         "cursor"
+
         "jetbrains-toolbox"
         "visual-studio-code"
         "warp"

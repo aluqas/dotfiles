@@ -2,9 +2,11 @@
   config,
   lib,
   pkgs,
+  repoRoot,
   ...
 }: let
   cfg = config.saqula.home.env;
+  miseConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/mise";
 in {
   options.saqula.home.env.enable = lib.mkEnableOption "development environment tools" // {default = true;};
 
@@ -27,6 +29,6 @@ in {
       uv
     ];
 
-    xdg.configFile."mise/config.toml".text = builtins.readFile ./mise/config.toml;
+    home.file.".config/mise".source = miseConfigPath;
   };
 }
