@@ -15,11 +15,11 @@
   ...
 }: let
   cfg = config.saqula.system.services.cluster.portainer;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkOption types mkEnableOption mkIf;
 in {
-  # hybrid merge を避けるため、mkFeatureOptionsExt で統一する
-  options.saqula.system.services.cluster.portainer = mkFeatureOptionsExt "Portainer Management Platform" {
+  options.saqula.system.services.cluster.portainer = {
+    enable = lib.mkEnableOption "Portainer Management Platform";
     server = {
       enable = mkOption {
         type = types.bool;
@@ -64,7 +64,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # Podman を有効化する
       virtualisation.podman.enable = true;
 

@@ -6,10 +6,9 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.longhorn;
-  inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.k3s.longhorn =
-    mkFeatureOptions "Longhorn (Distributed Block Storage)";
+  options.saqula.system.services.k3s.longhorn = {enable = lib.mkEnableOption "Longhorn (Distributed Block Storage)";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -18,7 +17,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # Longhorn Requirements
       services.openiscsi = {
         enable = true;

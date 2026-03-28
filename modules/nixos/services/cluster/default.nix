@@ -14,8 +14,6 @@ in {
     ../k3s
 
     # その他の cluster / container tool
-    ./nomad.nix
-    ./incus.nix
     ./portainer.nix
   ];
 
@@ -36,7 +34,5 @@ in {
     # saqula.system.services.k3s.enable = mkDefault true;
 
     # Nomad と Incus は既定で無効
-    saqula.system.services.cluster.nomad.enable = mkDefault false;
-    saqula.system.services.cluster.incus.enable = mkDefault false;
   };
 }

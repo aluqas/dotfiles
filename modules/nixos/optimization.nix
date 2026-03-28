@@ -12,16 +12,11 @@
 }: let
   cfg = config.saqula.core.optimization;
   cachixCfg = config.saqula.devex.cachix;
-  inherit
-    (saqulaLib)
-    mkFeatureOptionsExt
-    secrets
-    mkPlatformAssert
-    wrapConfig
-    ;
+  inherit (saqulaLib) secrets mkPlatformAssert;
   inherit (lib) mkEnableOption mkOption types;
 in {
-  options.saqula.core.optimization = mkFeatureOptionsExt "NixOS optimization settings" {
+  options.saqula.core.optimization = {
+    enable = lib.mkEnableOption "NixOS optimization settings";
     rust.enable = mkOption {
       type = types.bool;
       default = true;
@@ -54,7 +49,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # =========================================================================
       # C/C++ optimization（ccache）- NixOS only
       # =========================================================================

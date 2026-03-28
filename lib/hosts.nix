@@ -1,9 +1,8 @@
 {
   lib,
   inputs,
+  globalVars,
 }: let
-  globalVars = import ./vars.nix;
-  paths = import ./paths.nix {root = inputs.self;};
   overlays = import ./overlays.nix {inherit inputs;};
 
   mkSaqulaLib = {
@@ -14,18 +13,6 @@
       root = inputs.self;
       inherit isDarwin username;
     };
-
-    mkFeatureOptions = description: {
-      enable = lib.mkEnableOption description;
-    };
-
-    mkFeatureOptionsExt = description: extraOptions:
-      {
-        enable = lib.mkEnableOption description;
-      }
-      // extraOptions;
-
-    wrapConfig = cfg: content: lib.mkIf cfg.enable content;
 
     mkPlatformAssert = {
       name,
@@ -84,86 +71,73 @@
     };
   };
 
-  mkDarwinHost = _name: def: let
+  mkHost = isDarwin: _name: def: let
     hostVars = import (def.hostPath + "/vars.nix");
     user = def.user or hostVars.username or globalVars.defaultUser;
+    repoRoot =
+      if isDarwin
+      then "/Users/${user}/${globalVars.checkoutDirName}"
+      else "/home/${user}/${globalVars.checkoutDirName}";
     specialArgs = {
-      inherit inputs hostVars globalVars paths;
+      inherit inputs hostVars globalVars;
       saqulaLib = mkSaqulaLib {
-        isDarwin = true;
+        inherit isDarwin;
         username = user;
       };
     };
+    extraModules =
+      if isDarwin
+      then [
+        inputs.home-manager.darwinModules.home-manager
+        inputs.stylix.darwinModules.stylix
+        inputs.ragenix.darwinModules.default
+        inputs.nix-index-database.darwinModules.nix-index
+      ]
+      else [
+        inputs.home-manager.nixosModules.home-manager
+        inputs.stylix.nixosModules.stylix
+        inputs.ragenix.nixosModules.default
+        inputs.disko.nixosModules.disko
+        inputs.nix-index-database.nixosModules.nix-index
+        inputs.impermanence.nixosModules.impermanence
+      ];
+    build =
+      if isDarwin
+      then inputs.nix-darwin.lib.darwinSystem
+      else inputs.nixpkgs.lib.nixosSystem;
+    homeDirectory =
+      if isDarwin
+      then lib.mkForce "/Users/${user}"
+      else lib.mkDefault "/home/${user}";
   in
-    inputs.nix-darwin.lib.darwinSystem {
+    build {
       inherit (def) system;
       inherit specialArgs;
       modules =
-        darwinModules
+        (
+          if isDarwin
+          then darwinModules
+          else nixosModules
+        )
+        ++ extraModules
         ++ [
           baseNixpkgsModule
-          inputs.home-manager.darwinModules.home-manager
-          inputs.stylix.darwinModules.stylix
-          inputs.ragenix.darwinModules.default
-          inputs.nix-index-database.darwinModules.nix-index
           (def.hostPath + "/default.nix")
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
               backupFileExtension = "backup";
-              extraSpecialArgs = specialArgs;
-              sharedModules = [ inputs.stylix.homeModules.stylix ];
+              extraSpecialArgs = specialArgs // {inherit repoRoot;};
+              sharedModules = [inputs.stylix.homeModules.stylix];
               users.${user} = {
                 imports = def.homeImports;
                 home = {
                   username = lib.mkDefault user;
-                  homeDirectory = lib.mkForce "/Users/${user}";
+                  homeDirectory = homeDirectory;
+                  stateVersion = globalVars.stateVersions.home;
                 };
-              };
-            };
-          }
-        ];
-    };
-
-  mkNixosHost = _name: def: let
-    hostVars = import (def.hostPath + "/vars.nix");
-    user = def.user or hostVars.username or globalVars.defaultUser;
-    specialArgs = {
-      inherit inputs hostVars globalVars paths;
-      saqulaLib = mkSaqulaLib {
-        isDarwin = false;
-        username = user;
-      };
-    };
-  in
-    inputs.nixpkgs.lib.nixosSystem {
-      inherit (def) system;
-      inherit specialArgs;
-      modules =
-        nixosModules
-        ++ [
-          baseNixpkgsModule
-          inputs.home-manager.nixosModules.home-manager
-          inputs.stylix.nixosModules.stylix
-          inputs.ragenix.nixosModules.default
-          inputs.disko.nixosModules.disko
-          inputs.nix-index-database.nixosModules.nix-index
-          inputs.impermanence.nixosModules.impermanence
-          (def.hostPath + "/default.nix")
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "backup";
-              extraSpecialArgs = specialArgs;
-              sharedModules = [ inputs.stylix.homeModules.stylix ];
-              users.${user} = {
-                imports = def.homeImports;
-                home = {
-                  username = lib.mkDefault user;
-                  homeDirectory = lib.mkDefault "/home/${user}";
-                };
+                programs.home-manager.enable = true;
               };
             };
           }
@@ -171,7 +145,7 @@
     };
 in {
   mkHosts = definitions: {
-    darwinConfigurations = lib.mapAttrs mkDarwinHost definitions.darwin;
-    nixosConfigurations = lib.mapAttrs mkNixosHost definitions.nixos;
+    darwinConfigurations = lib.mapAttrs (mkHost true) definitions.darwin;
+    nixosConfigurations = lib.mapAttrs (mkHost false) definitions.nixos;
   };
 }

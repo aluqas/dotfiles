@@ -6,10 +6,9 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.vcluster;
-  inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.k3s.vcluster =
-    mkFeatureOptions "vCluster（Virtual Kubernetes Clusters）";
+  options.saqula.system.services.k3s.vcluster = {enable = lib.mkEnableOption "vCluster（Virtual Kubernetes Clusters）";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -18,7 +17,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       environment.systemPackages = with pkgs; [
         vcluster
         kubectl

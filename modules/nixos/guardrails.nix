@@ -11,10 +11,11 @@
   ...
 }: let
   cfg = config.saqula.core.guardrails;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (pkgs.stdenv) isLinux;
 in {
-  options.saqula.core.guardrails = mkFeatureOptionsExt "guardrails (assertions and warnings)" {
+  options.saqula.core.guardrails = {
+    enable = lib.mkEnableOption "guardrails (assertions and warnings)";
     requireImpermanence = lib.mkOption {
       type = lib.types.bool;
       default = true;

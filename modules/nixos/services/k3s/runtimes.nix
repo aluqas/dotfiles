@@ -11,7 +11,7 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.runtimes;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit
     (lib)
     mkOption
@@ -20,33 +20,32 @@
     optionalString
     ;
 in {
-  options.saqula.system.services.k3s.runtimes =
-    mkFeatureOptionsExt "K3s containerd runtimes（Youki, Crun, Kata, gVisor）"
-    {
-      youki.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Youki runtime を有効化する";
-      };
-
-      crun.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = "crun runtime を有効化する";
-      };
-
-      kata.enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Kata Containers を有効化する";
-      };
-
-      gvisor.enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = "gVisor / runsc を有効化する";
-      };
+  options.saqula.system.services.k3s.runtimes = {
+    enable = lib.mkEnableOption "K3s containerd runtimes（Youki, Crun, Kata, gVisor）";
+    youki.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Youki runtime を有効化する";
     };
+
+    crun.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "crun runtime を有効化する";
+    };
+
+    kata.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Kata Containers を有効化する";
+    };
+
+    gvisor.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "gVisor / runsc を有効化する";
+    };
+  };
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -55,7 +54,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # runtime パッケージ
       environment.systemPackages = with pkgs;
         [

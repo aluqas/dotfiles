@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "deepwiki": {
+      "url": "https://mcp.deepwiki.com/sse"
+    },
+    "arxiv-mcp-server": {
+      "command": "uvx",
+      "args": ["arxiv-mcp-server", "--storage-path", "~/Documents/arxiv"]
+    }
+  }
+}

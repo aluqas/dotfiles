@@ -10,18 +10,17 @@
   ...
 }: let
   cfg = config.saqula.system.services.container.containerd;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkOption types mkDefault;
 in {
-  options.saqula.system.services.container.containerd =
-    mkFeatureOptionsExt "Container Environment (containerd + nerdctl)"
-    {
-      rootless = mkOption {
-        type = types.bool;
-        default = false;
-        description = "rootless container サポートを有効化する";
-      };
+  options.saqula.system.services.container.containerd = {
+    enable = lib.mkEnableOption "Container Environment (containerd + nerdctl)";
+    rootless = mkOption {
+      type = types.bool;
+      default = false;
+      description = "rootless container サポートを有効化する";
     };
+  };
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -30,7 +29,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # containerd を有効化する
       virtualisation.containerd = {
         enable = true;

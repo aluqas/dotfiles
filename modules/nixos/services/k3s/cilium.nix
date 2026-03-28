@@ -6,9 +6,9 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.cilium;
-  inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.k3s.cilium = mkFeatureOptions "Cilium eBPF Networking";
+  options.saqula.system.services.k3s.cilium = {enable = lib.mkEnableOption "Cilium eBPF Networking";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -17,7 +17,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       environment.systemPackages = with pkgs; [
         kubernetes-helm
         kubectl

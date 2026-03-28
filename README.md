@@ -4,11 +4,11 @@
 
 - `macbook` 向けの `nix-darwin`
 - `nixos-bootstrap` や `oci-nixcloud` のような NixOS ホスト
-- `homes/saqula` を中心にした共有 Home Manager 開発環境
+- `profiles/home/*` と `hosts/*/home.nix` による Home Manager 開発環境
 
 この repo の基本ルールは次のとおりです。
 
-**Modules は実装する, Profiles は組み立てる, Hosts は具現化する, Homes はユーザー環境を持つ**
+**Modules は実装する, Profiles は組み立てる, Hosts は具現化する**
 
 詳しい設計と拡張ルールは [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) にまとめています。
 「どこを触ればよいか」「どう配線されるか」を知りたいときは、まずそちらを読む想定です。
@@ -55,7 +55,6 @@ clean
 - repo 全体の入口と host 定義: [`flake.nix`](./flake.nix)
 - 共通の host 組み立て: [`lib/hosts.nix`](./lib/hosts.nix)
 - グローバル既定値と path helper: [`lib/vars.nix`](./lib/vars.nix), [`lib/paths.nix`](./lib/paths.nix)
-- shared user environment の入口: [`homes/saqula/default.nix`](./homes/saqula/default.nix)
 - Home Manager の shared 実装: [`modules/home/*`](./modules/home)
 - Darwin / NixOS の system 実装: [`modules/darwin/*`](./modules/darwin), [`modules/nixos/*`](./modules/nixos)
 - 再利用可能な束: [`profiles/home/*`](./profiles/home), [`profiles/system/*`](./profiles/system)
@@ -66,10 +65,10 @@ clean
 
 - 再利用可能な system 機能を足したい: `modules/darwin/*` または `modules/nixos/*`
 - 複数 host で共有する方針を足したい: `profiles/system/*`
-- 共有 user tooling を足したい: `modules/home/*` を実装し、`homes/saqula/*` または `profiles/home/*` で束ねる
+- 共有 user tooling を足したい: `modules/home/*` を実装し、`profiles/home/*` で束ねるか `hosts/*/home.nix` で有効化する
 - 特定 host だけを調整したい: `hosts/*`
-- 実際の dotfiles を変えたい: `dotfiles/*`
-- テーマや配色を変えたい: `homes/saqula/stylix.nix` と `dotfiles/stylix/*`
+- 実際の dotfiles を変えたい: `modules/home/*` 内の対応モジュールディレクトリ
+- テーマや配色を変えたい: `profiles/home/stylix/` と `profiles/home/stylix/rose-pine-moon.yaml`
 - secret を追加したい: `secrets/*.age`, `secrets/secrets.nix`, `lib/secrets.nix`, `lib/keys.nix`
 - deploy や bootstrap 手順を変えたい: `ops/*` または `scripts/*`
 
@@ -113,10 +112,10 @@ clean
 
 - input の取り込み: [`flake.nix`](./flake.nix)
 - host への注入: [`lib/hosts.nix`](./lib/hosts.nix)
-- shared Home Manager 設定: [`homes/saqula/stylix.nix`](./homes/saqula/stylix.nix)
-- theme asset: [`dotfiles/stylix`](./dotfiles/stylix)
+- shared Home Manager 設定: [`profiles/home/stylix/default.nix`](./profiles/home/stylix/default.nix)
+- theme asset: [`profiles/home/stylix/rose-pine-moon.yaml`](./profiles/home/stylix/rose-pine-moon.yaml)
 
-共通テーマはまず shared home 側へ寄せ、アプリ固有の細かい調整は `modules/home/*` または `dotfiles/*` で吸収します。
+共通テーマはまず shared home 側へ寄せ、アプリ固有の細かい調整は `modules/home/*` で吸収します。
 
 ### Secrets / age / ragenix
 

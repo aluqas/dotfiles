@@ -6,8 +6,7 @@
   hostVars,
   globalVars,
   ...
-}:
-let
+}: let
   cfg = config.saqula.darwin.base;
   inherit (lib) escapeShellArg mkEnableOption mkIf;
   primaryUser = escapeShellArg hostVars.username;
@@ -18,13 +17,12 @@ let
   };
   sshDir = secrets.sshDir;
   knownHosts = "${sshDir}/known_hosts";
-in
-{
+in {
   options.saqula.darwin.base.enable = mkEnableOption "Darwin base configuration";
 
   config = mkIf cfg.enable {
     nixpkgs = {
-      overlays = import "${inputs.self}/lib/overlays.nix" { inherit inputs; };
+      overlays = import "${inputs.self}/lib/overlays.nix" {inherit inputs;};
       config.allowUnfree = true;
     };
 
@@ -82,7 +80,7 @@ in
       sccache
     ];
 
-    environment.shells = [ pkgs.fish ];
+    environment.shells = [pkgs.fish];
     users.users.${hostVars.username}.shell = pkgs.fish;
 
     programs.fish.enable = true;
@@ -260,7 +258,7 @@ in
           };
         };
         "com.apple.Spotlight" = {
-          EnabledPreferenceRules = [ ]; # Spotlightの検索カテゴリを空にする
+          EnabledPreferenceRules = []; # Spotlightの検索カテゴリを空にする
         };
 
         # 解析送信・広告・クラッシュ表示を抑止する
@@ -289,7 +287,7 @@ in
       };
     };
 
-    age.identityPaths = [ "/Users/${hostVars.username}/.config/age/keys.txt" ];
+    age.identityPaths = ["/Users/${hostVars.username}/.config/age/keys.txt"];
     age.secrets.id_ed25519_git = secrets.mkSshKey "id_ed25519_git";
     age.secrets.id_ed25519_emergency = secrets.mkSshKey "id_ed25519_emergency";
     age.secrets.ssh-config = secrets.mkSshConfig "config.age";

@@ -12,11 +12,11 @@
 }: let
   cfg = config.saqula.system.services.k3s.tailscale;
   k3sCfg = config.saqula.system.services.k3s;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkOption types concatStringsSep optionalString;
 in {
-  # mkFeatureOptionsExt をすっきり使う
-  options.saqula.system.services.k3s.tailscale = mkFeatureOptionsExt "Tailscale Kubernetes Operator" {
+  options.saqula.system.services.k3s.tailscale = {
+    enable = lib.mkEnableOption "Tailscale Kubernetes Operator";
     oauth = {
       clientId = mkOption {
         type = types.str;
@@ -44,7 +44,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg (lib.mkIf k3sCfg.enable {
+    (lib.mkIf cfg.enable (lib.mkIf k3sCfg.enable {
       systemd.services.tailscale-operator-deploy = {
         description = "Tailscale Kubernetes Operator をデプロイする";
         after = ["k3s.service" "network-online.target"];

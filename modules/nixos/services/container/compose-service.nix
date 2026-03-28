@@ -24,43 +24,43 @@ with lib; let
       workDir = mkOption {
         type = types.str;
         default = "/var/lib/${name}";
-      description = "service の working directory";
+        description = "service の working directory";
       };
 
       composeFile = mkOption {
         type = types.nullOr types.lines;
         default = null;
-      description = "docker-compose.yml の内容（文字列）";
+        description = "docker-compose.yml の内容（文字列）";
       };
 
       environment = mkOption {
         type = types.attrsOf types.str;
         default = {};
-      description = ".env ファイルへ書き出す environment variable";
+        description = ".env ファイルへ書き出す environment variable";
       };
 
       extraDirs = mkOption {
         type = types.listOf types.str;
         default = [];
-      description = "workDir 配下に追加で作る directory の一覧（例: ['db' 'config']）";
+        description = "workDir 配下に追加で作る directory の一覧（例: ['db' 'config']）";
       };
 
       user = mkOption {
         type = types.str;
         default = "root";
-      description = "directory の所有 user";
+        description = "directory の所有 user";
       };
 
       group = mkOption {
         type = types.str;
         default = "root";
-      description = "directory の所有 group";
+        description = "directory の所有 group";
       };
 
       preStart = mkOption {
         type = types.lines;
         default = "";
-      description = "docker-compose up の前に実行する追加 shell command";
+        description = "docker-compose up の前に実行する追加 shell command";
       };
     };
   };

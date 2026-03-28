@@ -32,9 +32,7 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
-
     flake-root.url = "github:srid/flake-root";
-
     flake-utils.url = "github:numtide/flake-utils";
 
     # treefmt-nix.url = "github:numtide/treefmt-nix";
@@ -42,6 +40,8 @@
 
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
+
+    kickstart-nixvim.url = "github:JMartJonesy/kickstart.nixvim";
 
     nix-health.url = "github:juspay/nix-health";
     nix-health.inputs.nixpkgs.follows = "nixpkgs";
@@ -54,7 +54,6 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs = inputs @ {
@@ -101,20 +100,30 @@
       };
 
       flake = let
+        globalVars = {
+          defaultUser = "saqula";
+          defaultTimezone = "Asia/Tokyo";
+          defaultLocale = "en_US.UTF-8";
+          checkoutDirName = "dotfiles";
+          stateVersions = {
+            home = "24.11";
+            nixos = "25.05";
+            darwin = 6;
+          };
+        };
+
         hostLib = import ./lib/hosts.nix {
           inherit (nixpkgs) lib;
-          inherit inputs;
+          inherit inputs globalVars;
         };
 
         hostDefinitions = {
           darwin = {
             macbook = {
               system = "aarch64-darwin";
-              hostPath = ./hosts/darwin/macbook;
+              hostPath = ./hosts/macbook;
               homeImports = [
-                ./homes/saqula/default.nix
-                ./profiles/home/develop.nix
-                ./homes/saqula/platform/darwin.nix
+                ./hosts/macbook/home.nix
               ];
             };
           };
@@ -122,20 +131,17 @@
           nixos = {
             nixos-bootstrap = {
               system = "aarch64-linux";
-              hostPath = ./hosts/nixos/nixos-bootstrap;
+              hostPath = ./hosts/nixos-bootstrap;
               homeImports = [
-                ./homes/saqula/default.nix
-                ./profiles/home/develop.nix
+                ./hosts/nixos-bootstrap/home.nix
               ];
             };
 
             oci-nixcloud = {
               system = "aarch64-linux";
-              hostPath = ./hosts/nixos/oci-nixcloud;
+              hostPath = ./hosts/oci-nixcloud;
               homeImports = [
-                ./homes/saqula/default.nix
-                ./profiles/home/develop.nix
-                ./profiles/home/infra.nix
+                ./hosts/oci-nixcloud/home.nix
               ];
             };
           };

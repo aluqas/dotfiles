@@ -1,37 +1,40 @@
 {
   config,
+  globalVars,
+  hostVars,
   lib,
+  pkgs,
   ...
-}:
-let
+}: let
   cfg = config.saqula.darwin.apps;
   inherit (lib) mkEnableOption mkIf;
-in
-{
-  options.saqula.darwin.apps.enable = mkEnableOption "Darwin GUI applications and fonts";
+  homeUser = hostVars.username or globalVars.defaultUser;
+  darwinFontCasks = lib.attrByPath ["home-manager" "users" homeUser "saqula" "home" "fonts" "darwinBrewCasks"] [] config;
+in {
+  options.saqula.darwin.apps.enable = mkEnableOption "Darwin GUI applications";
 
   config = mkIf cfg.enable {
     services.tailscale.enable = true;
+
+    environment.systemPackages = with pkgs; [
+      # mas は Homebrew 側で不安定だったため Nix で入れる
+      mas
+      lima
+      colima
+      # mole # 対応してないっぽい！有志がflake.nix作ってはいたのでそっち対応するのか
+      ni # node templateかmodulesに移す
+      spicetify-cli
+    ];
 
     homebrew = {
       enable = true;
       onActivation = {
         cleanup = "zap";
-        autoUpdate = false;
+        autoUpdate = true;
         upgrade = false;
       };
 
-      brews = [
-        "mas"
-
-        "lima"
-        "mole"
-        "ni"
-        "oci-cli"
-        "spicetify-cli"
-      ];
-
-      casks = [
+      casks = darwinFontCasks ++ [
         # ブラウザ
         "arc"
         "zen"
@@ -100,7 +103,10 @@ in
 
         "alacritty"
         "ghostty"
+
+        "antigravity"
         "cursor"
+
         "jetbrains-toolbox"
         "visual-studio-code"
         "warp"
@@ -120,6 +126,7 @@ in
         "tradingview"
         "wireshark-app"
 
+        # TODO: java runtimes convert to nixpkgs
         "zulu"
         "zulu@17"
         "zulu@21"
@@ -127,45 +134,6 @@ in
         #"temurin@17"
         # "temurin@21"
         # "temurin@8"
-
-        "font-hackgen-nerd"
-        "font-hubot-sans"
-        "font-mona-sans"
-        "font-plemol-jp-nf"
-        "font-source-code-pro"
-        "font-biz-udpgothic"
-        "font-biz-udpmincho"
-        "font-cica"
-        "font-computer-modern"
-        "font-firgenerd"
-        "font-genjyuugothic"
-        "font-genryumin"
-        "font-genshingothic"
-        "font-genyogothic"
-        "font-genyomin"
-        "font-hack"
-        "font-m-plus-1"
-        "font-m-plus-1-code"
-        "font-m-plus-2"
-        "font-maple-mono-nf-cn"
-        "font-monaspace-nerd-font"
-        "font-monaspice-nerd-font"
-        "font-new-computer-modern"
-        "font-noto-color-emoji"
-        "font-noto-emoji"
-        # "font-noto-mono"
-        "font-noto-music"
-        "font-noto-sans"
-        "font-noto-sans-cjk-jp"
-        "font-noto-sans-math"
-        "font-noto-sans-mono-cjk-jp"
-        "font-noto-sans-symbols"
-        "font-noto-sans-symbols-2"
-        "font-noto-serif"
-        "font-noto-serif-cjk-jp"
-        "font-times-new-roman"
-        "font-times-newer-roman"
-        "font-udev-gothic-nf"
       ];
 
       masApps = {

@@ -5,9 +5,9 @@
   inputs,
   ...
 }: let
-  cfg = config.saqula.home.agent.mcp;
+  cfg = config.saqula.home.mcp;
 
-  mcpServersPath = "${inputs.self}/dotfiles/mcpservers.json";
+  mcpServersPath = "${inputs.self}/modules/home/agent/mcp/mcpservers.json";
   mcpServers =
     if builtins.pathExists mcpServersPath
     then builtins.fromJSON (builtins.readFile mcpServersPath)
@@ -28,7 +28,7 @@
 
   cursorMcpConfig = {inherit (mcpServers) mcpServers;};
 in {
-  options.saqula.home.agent.mcp.enable = lib.mkEnableOption "MCP server configurations";
+  options.saqula.home.mcp.enable = lib.mkEnableOption "MCP server configurations" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     home.file =

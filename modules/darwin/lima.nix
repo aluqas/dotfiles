@@ -4,8 +4,7 @@
   pkgs,
   inputs,
   ...
-}:
-let
+}: let
   cfg = config.saqula.darwin.lima;
   inherit (lib) mkEnableOption mkIf mkOption types;
 
@@ -21,8 +20,7 @@ let
   '';
 
   initScriptPath = "${inputs.self}/scripts/lima-init-containerd-youki.sh";
-in
-{
+in {
   options.saqula.darwin.lima = {
     enable = mkEnableOption "Lima-based containerd environment on macOS";
 

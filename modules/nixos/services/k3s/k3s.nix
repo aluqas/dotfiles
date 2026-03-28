@@ -6,10 +6,11 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.k3s;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkDefault mkOption types;
 in {
-  options.saqula.system.services.k3s.k3s = mkFeatureOptionsExt "k3s（Kubernetes）server" {
+  options.saqula.system.services.k3s.k3s = {
+    enable = lib.mkEnableOption "k3s（Kubernetes）server";
     package = mkOption {
       type = types.package;
       default = pkgs.k3s;
@@ -32,7 +33,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # K3s package
       environment.systemPackages = [
         cfg.package

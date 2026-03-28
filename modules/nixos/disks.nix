@@ -26,14 +26,15 @@
   ...
 }: let
   cfg = config.saqula.core.disks;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkOption types;
 in {
   options.saqula.core.disks = {
     # =========================================================================
     # Btrfs ルートディスク (impermanence 対応の primary boot disk)
     # =========================================================================
-    btrfsRoot = mkFeatureOptionsExt "Btrfs root disk configuration" {
+    btrfsRoot = {
+      enable = lib.mkEnableOption "Btrfs root disk configuration";
       device = mkOption {
         type = types.str;
         default = "/dev/sda";
@@ -71,7 +72,8 @@ in {
     # =========================================================================
     # Block Storage (任意の secondary disk)
     # =========================================================================
-    blockStorage = mkFeatureOptionsExt "Optional block storage (secondary disk)" {
+    blockStorage = {
+      enable = lib.mkEnableOption "Optional block storage (secondary disk)";
       device = mkOption {
         type = types.str;
         default = "/dev/sdb";
@@ -121,7 +123,7 @@ in {
     # =========================================================================
     # Btrfs ルート設定
     # =========================================================================
-    (wrapConfig cfg.btrfsRoot {
+    (lib.mkIf cfg.btrfsRoot.enable {
       disko.devices.disk.main = {
         type = "disk";
         inherit (cfg.btrfsRoot) device;
@@ -167,7 +169,7 @@ in {
     # =========================================================================
     # Block Storage 設定
     # =========================================================================
-    (wrapConfig cfg.blockStorage {
+    (lib.mkIf cfg.blockStorage.enable {
       disko.devices.disk.storage = {
         type = "disk";
         inherit (cfg.blockStorage) device;

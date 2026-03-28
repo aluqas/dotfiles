@@ -25,24 +25,24 @@ with lib; let
           "podman"
         ];
         default = "podman";
-      description = "使う container backend";
+        description = "使う container backend";
       };
 
       authKeyFile = mkOption {
         type = types.path;
-      description = "Tailscale auth key を含む file の path";
+        description = "Tailscale auth key を含む file の path";
       };
 
       hostname = mkOption {
         type = types.str;
         default = name;
-      description = "Tailscale hostname（既定は instance 名）";
+        description = "Tailscale hostname（既定は instance 名）";
       };
 
       tags = mkOption {
         type = types.listOf types.str;
         default = ["tag:server"];
-      description = "適用する Tailscale tag（例: tag:server）。auth key 側で許可されている必要がある。";
+        description = "適用する Tailscale tag（例: tag:server）。auth key 側で許可されている必要がある。";
       };
 
       serve = {
@@ -67,13 +67,13 @@ with lib; let
       waitFor = mkOption {
         type = types.listOf types.str;
         default = [];
-          description = "serve を設定する前に待つ systemd service の一覧（例: ['coolify.service']）";
+        description = "serve を設定する前に待つ systemd service の一覧（例: ['coolify.service']）";
       };
 
       extraOptions = mkOption {
         type = types.listOf types.str;
         default = [];
-          description = "oci-containers の追加 option";
+        description = "oci-containers の追加 option";
       };
     };
   };
@@ -88,103 +88,104 @@ in {
 
   config = let
     enabledInstances = filterAttrs (_: i: i.enable) cfg.instances;
-  in mkIf (enabledInstances != {}) {
-    # backend service が有効であることを保証する
-    virtualisation.podman.enable =
-      mkIf (any (i: i.backend == "podman") (
-        attrValues enabledInstances
-      ))
-      true;
-    virtualisation.docker.enable =
-      mkIf (any (i: i.backend == "docker") (
-        attrValues enabledInstances
-      ))
-      true;
+  in
+    mkIf (enabledInstances != {}) {
+      # backend service が有効であることを保証する
+      virtualisation.podman.enable =
+        mkIf (any (i: i.backend == "podman") (
+          attrValues enabledInstances
+        ))
+        true;
+      virtualisation.docker.enable =
+        mkIf (any (i: i.backend == "docker") (
+          attrValues enabledInstances
+        ))
+        true;
 
-    # 各 instance の設定を生成する
-    virtualisation.oci-containers.containers =
-      mapAttrs' (name: instance: {
-        name = "${name}-tailscale";
-        value = {
-          image = "docker.io/tailscale/tailscale:latest";
-          autoStart = true;
+      # 各 instance の設定を生成する
+      virtualisation.oci-containers.containers =
+        mapAttrs' (name: instance: {
+          name = "${name}-tailscale";
+          value = {
+            image = "docker.io/tailscale/tailscale:latest";
+            autoStart = true;
 
-          cmd = [
-            "-c"
-            "export TS_AUTHKEY=$(cat /run/secrets/tailscale-auth-key) && /usr/local/bin/containerboot"
-          ];
-          entrypoint = "/bin/sh";
+            cmd = [
+              "-c"
+              "export TS_AUTHKEY=$(cat /run/secrets/tailscale-auth-key) && /usr/local/bin/containerboot"
+            ];
+            entrypoint = "/bin/sh";
 
-          extraOptions =
-            [
-              "--cap-add=NET_ADMIN"
-              "--network=host"
-            ]
-            ++ instance.extraOptions;
+            extraOptions =
+              [
+                "--cap-add=NET_ADMIN"
+                "--network=host"
+              ]
+              ++ instance.extraOptions;
 
-          volumes = [
-            "/var/lib/tailscale-${name}:/var/lib/tailscale"
-            "${instance.authKeyFile}:/run/secrets/tailscale-auth-key:ro"
-          ];
+            volumes = [
+              "/var/lib/tailscale-${name}:/var/lib/tailscale"
+              "${instance.authKeyFile}:/run/secrets/tailscale-auth-key:ro"
+            ];
 
-          environment = {
-            TS_HOSTNAME = instance.hostname;
-            TS_STATE_DIR = "/var/lib/tailscale";
-            TS_USERSPACE = "true";
-            TS_EXTRA_ARGS = "--accept-routes=false";
-            TS_TAGS = concatStringsSep "," instance.tags;
+            environment = {
+              TS_HOSTNAME = instance.hostname;
+              TS_STATE_DIR = "/var/lib/tailscale";
+              TS_USERSPACE = "true";
+              TS_EXTRA_ARGS = "--accept-routes=false";
+              TS_TAGS = concatStringsSep "," instance.tags;
+            };
           };
-        };
-      })
-      enabledInstances;
+        })
+        enabledInstances;
 
-    # state directory を作る
-    systemd.tmpfiles.rules =
-      mapAttrsToList (
-        name: _instance: "d /var/lib/tailscale-${name} 0700 root root -"
-      )
-      enabledInstances;
+      # state directory を作る
+      systemd.tmpfiles.rules =
+        mapAttrsToList (
+          name: _instance: "d /var/lib/tailscale-${name} 0700 root root -"
+        )
+        enabledInstances;
 
-    # 設定 service を作る
-    systemd.services =
-      mapAttrs' (name: instance: {
-        name = "${name}-tailscale-config";
-        value = mkIf instance.serve.enable {
-          description = "Configure Tailscale Serve for ${name}";
-          after = ["${instance.backend}-${name}-tailscale.service"] ++ instance.waitFor;
-          requires = ["${instance.backend}-${name}-tailscale.service"];
-          wantedBy = ["multi-user.target"];
+      # 設定 service を作る
+      systemd.services =
+        mapAttrs' (name: instance: {
+          name = "${name}-tailscale-config";
+          value = mkIf instance.serve.enable {
+            description = "Configure Tailscale Serve for ${name}";
+            after = ["${instance.backend}-${name}-tailscale.service"] ++ instance.waitFor;
+            requires = ["${instance.backend}-${name}-tailscale.service"];
+            wantedBy = ["multi-user.target"];
 
-          path = [pkgs.${instance.backend}];
+            path = [pkgs.${instance.backend}];
 
-          script = ''
-            # Tailscale container を待つ
-            echo "Waiting for Tailscale sidecar..."
-            for i in $(seq 1 60); do
-              if ${instance.backend} exec ${name}-tailscale tailscale status >/dev/null 2>&1; then
-                break
-              fi
-              sleep 2
-            done
+            script = ''
+              # Tailscale container を待つ
+              echo "Waiting for Tailscale sidecar..."
+              for i in $(seq 1 60); do
+                if ${instance.backend} exec ${name}-tailscale tailscale status >/dev/null 2>&1; then
+                  break
+                fi
+                sleep 2
+              done
 
-            # Serve を設定する
-            echo "Configuring Tailscale Serve..."
-            ${instance.backend} exec ${name}-tailscale tailscale serve --bg --https=${toString instance.serve.port} ${instance.serve.targetUrl}
+              # Serve を設定する
+              echo "Configuring Tailscale Serve..."
+              ${instance.backend} exec ${name}-tailscale tailscale serve --bg --https=${toString instance.serve.port} ${instance.serve.targetUrl}
 
-            echo "Tailscale serve configured for ${name} -> ${instance.serve.targetUrl}"
-          '';
+              echo "Tailscale serve configured for ${name} -> ${instance.serve.targetUrl}"
+            '';
 
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            TimeoutStartSec = "5min";
-            Restart = "on-failure";
-            RestartSec = "30s";
-            StartLimitBurst = 5;
-            StartLimitIntervalSec = "10min";
+            serviceConfig = {
+              Type = "oneshot";
+              RemainAfterExit = true;
+              TimeoutStartSec = "5min";
+              Restart = "on-failure";
+              RestartSec = "30s";
+              StartLimitBurst = 5;
+              StartLimitIntervalSec = "10min";
+            };
           };
-        };
-      })
-      enabledInstances;
-  };
+        })
+        enabledInstances;
+    };
 }
