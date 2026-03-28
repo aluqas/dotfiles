@@ -1,18 +1,19 @@
 {
   config,
   lib,
+  repoRoot,
   ...
 }: let
   cfg = config.saqula.home.helix;
+  helixConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/helix";
 in {
   options.saqula.home.helix.enable = lib.mkEnableOption "helix editor configuration" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     programs.helix = {
       enable = true;
-      settings = builtins.fromTOML (builtins.readFile ./helix/config.toml);
     };
 
-    xdg.configFile."helix/languages.toml".text = builtins.readFile ./helix/languages.toml;
+    home.file.".config/helix".source = helixConfigPath;
   };
 }
