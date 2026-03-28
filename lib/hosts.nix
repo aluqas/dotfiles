@@ -129,7 +129,10 @@
               useUserPackages = true;
               backupFileExtension = "backup";
               extraSpecialArgs = specialArgs // {inherit repoRoot;};
-              sharedModules = [inputs.stylix.homeModules.stylix];
+              sharedModules = [
+                inputs.stylix.homeModules.stylix
+                inputs.nixvim.homeManagerModules.nixvim
+              ];
               users.${user} = {
                 imports = def.homeImports;
                 home = {

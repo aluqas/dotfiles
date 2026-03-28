@@ -42,6 +42,9 @@
     devenv.inputs.nixpkgs.follows = "nixpkgs";
 
     kickstart-nixvim.url = "github:JMartJonesy/kickstart.nixvim";
+    kickstart-nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    nixvim.url = "github:nix-community/nixvim";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-health.url = "github:juspay/nix-health";
     nix-health.inputs.nixpkgs.follows = "nixpkgs";
