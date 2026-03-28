@@ -63,7 +63,7 @@
     ) (lib.attrNames vscodeEditors)
   );
 in {
-  options.saqula.home.vscode.enable = lib.mkEnableOption "VSCode/Cursor configuration" // { default = true; };
+  options.saqula.home.vscode.enable = lib.mkEnableOption "VSCode/Cursor configuration" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     programs.vscode = {

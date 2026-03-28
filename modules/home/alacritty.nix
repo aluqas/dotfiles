@@ -6,7 +6,7 @@
 }: let
   cfg = config.saqula.home.alacritty;
 in {
-  options.saqula.home.alacritty.enable = lib.mkEnableOption "alacritty terminal configuration" // { default = true; };
+  options.saqula.home.alacritty.enable = lib.mkEnableOption "alacritty terminal configuration" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     programs.alacritty = {

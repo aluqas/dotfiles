@@ -6,7 +6,7 @@
 }: let
   cfg = config.saqula.home.build;
 in {
-  options.saqula.home.build.enable = lib.mkEnableOption "build tools" // { default = true; };
+  options.saqula.home.build.enable = lib.mkEnableOption "build tools" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

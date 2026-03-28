@@ -11,7 +11,7 @@
     then "${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac"
     else "${pkgs.pinentry-curses}/bin/pinentry-curses";
 in {
-  options.saqula.home.gpg.enable = lib.mkEnableOption "GPG configuration" // { default = true; };
+  options.saqula.home.gpg.enable = lib.mkEnableOption "GPG configuration" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     home.packages = [

@@ -8,7 +8,7 @@
   cfg = config.saqula.system.services.container.podman;
   inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.container.podman = { enable = lib.mkEnableOption "Podman container runtime"; };
+  options.saqula.system.services.container.podman = {enable = lib.mkEnableOption "Podman container runtime";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {

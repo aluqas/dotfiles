@@ -16,11 +16,11 @@ in {
   options.saqula.system.services.container.containerd = {
     enable = lib.mkEnableOption "Container Environment (containerd + nerdctl)";
     rootless = mkOption {
-        type = types.bool;
-        default = false;
-        description = "rootless container サポートを有効化する";
-      };
+      type = types.bool;
+      default = false;
+      description = "rootless container サポートを有効化する";
     };
+  };
 
   config = lib.mkMerge [
     (mkPlatformAssert {

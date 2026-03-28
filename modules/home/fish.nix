@@ -5,7 +5,7 @@
 }: let
   cfg = config.saqula.home.fish;
 in {
-  options.saqula.home.fish.enable = lib.mkEnableOption "fish shell configuration" // { default = true; };
+  options.saqula.home.fish.enable = lib.mkEnableOption "fish shell configuration" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     programs.fish = {

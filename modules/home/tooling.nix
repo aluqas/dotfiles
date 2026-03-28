@@ -6,7 +6,7 @@
 }: let
   cfg = config.saqula.home.tooling;
 in {
-  options.saqula.home.tooling.enable = lib.mkEnableOption "infrastructure tooling" // { default = true; };
+  options.saqula.home.tooling.enable = lib.mkEnableOption "infrastructure tooling" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs;

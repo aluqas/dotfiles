@@ -41,6 +41,8 @@
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
 
+    kickstart-nixvim.url = "github:JMartJonesy/kickstart.nixvim";
+
     nix-health.url = "github:juspay/nix-health";
     nix-health.inputs.nixpkgs.follows = "nixpkgs";
 

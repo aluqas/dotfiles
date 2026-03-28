@@ -17,7 +17,7 @@
   sshDir = secrets.sshDir;
   knownHosts = "${sshDir}/known_hosts";
 in {
-  options.saqula.core.security = { enable = lib.mkEnableOption "NixOS security integrations"; };
+  options.saqula.core.security = {enable = lib.mkEnableOption "NixOS security integrations";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {

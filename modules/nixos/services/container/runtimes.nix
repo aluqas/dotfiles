@@ -25,39 +25,38 @@
     optionalAttrs
     ;
 in {
-  options.saqula.system.services.container.runtimes =
-    {
-      enable = lib.mkEnableOption "Container Runtimes (Youki, Crun, Kata, gVisor)";
-      youki.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Enable Youki runtime (Rust-based OCI runtime)";
-      };
-
-      crun.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Enable crun runtime (lightweight C implementation)";
-      };
-
-      kata.enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Enable Kata Containers (VM-based isolation)";
-      };
-
-      gvisor.enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Enable gVisor/runsc (sandboxed userspace kernel)";
-      };
-
-      wasm.enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Enable WebAssembly runtime support";
-      };
+  options.saqula.system.services.container.runtimes = {
+    enable = lib.mkEnableOption "Container Runtimes (Youki, Crun, Kata, gVisor)";
+    youki.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Youki runtime (Rust-based OCI runtime)";
     };
+
+    crun.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable crun runtime (lightweight C implementation)";
+    };
+
+    kata.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable Kata Containers (VM-based isolation)";
+    };
+
+    gvisor.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable gVisor/runsc (sandboxed userspace kernel)";
+    };
+
+    wasm.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable WebAssembly runtime support";
+    };
+  };
 
   config = lib.mkMerge [
     (mkPlatformAssert {

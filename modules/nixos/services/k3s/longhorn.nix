@@ -8,8 +8,7 @@
   cfg = config.saqula.system.services.k3s.longhorn;
   inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.k3s.longhorn =
-    { enable = lib.mkEnableOption "Longhorn (Distributed Block Storage)"; };
+  options.saqula.system.services.k3s.longhorn = {enable = lib.mkEnableOption "Longhorn (Distributed Block Storage)";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {

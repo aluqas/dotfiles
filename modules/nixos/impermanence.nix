@@ -14,7 +14,7 @@
   inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkEnableOption mkOption types;
 in {
-  options.saqula.core.impermanence = { enable = lib.mkEnableOption "system impermanence (NixOS)"; };
+  options.saqula.core.impermanence = {enable = lib.mkEnableOption "system impermanence (NixOS)";};
 
   # btrbk options（impermanence と密結合のためここで定義）
   options.saqula.system.btrbk = {

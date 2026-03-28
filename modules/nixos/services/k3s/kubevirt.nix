@@ -8,8 +8,7 @@
   cfg = config.saqula.system.services.k3s.kubevirt;
   inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.k3s.kubevirt =
-    { enable = lib.mkEnableOption "KubeVirt (Kubernetes Virtualization)"; };
+  options.saqula.system.services.k3s.kubevirt = {enable = lib.mkEnableOption "KubeVirt (Kubernetes Virtualization)";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {

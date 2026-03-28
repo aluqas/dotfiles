@@ -8,7 +8,7 @@
   cfg = config.saqula.system.services.k3s.cilium;
   inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.k3s.cilium = { enable = lib.mkEnableOption "Cilium eBPF Networking"; };
+  options.saqula.system.services.k3s.cilium = {enable = lib.mkEnableOption "Cilium eBPF Networking";};
 
   config = lib.mkMerge [
     (mkPlatformAssert {

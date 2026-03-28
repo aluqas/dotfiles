@@ -6,7 +6,7 @@
 }: let
   cfg = config.saqula.home.zellij;
 in {
-  options.saqula.home.zellij.enable = lib.mkEnableOption "zellij configuration" // { default = true; };
+  options.saqula.home.zellij.enable = lib.mkEnableOption "zellij configuration" // {default = true;};
 
   config = lib.mkIf cfg.enable {
     programs.zellij = {
