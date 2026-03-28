@@ -20,6 +20,9 @@
     ./dokploy.nix
     ./komodo.nix
     ./tau.nix
+    ./lab/coolify.nix
+    ./lab/cyclops.nix
+    ./lab/headlamp.nix
   ];
 
   saqula.system.services = {

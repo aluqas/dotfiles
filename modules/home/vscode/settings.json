@@ -1,1 +1,537 @@
-{}
+{
+	// cursor
+	"update.releaseTrack": "prerelease",
+	"cursor.cpp.enablePartialAccepts": true,
+	"cursor.composer.shouldAllowCustomModes": true,
+	"cursor.composer.shouldChimeAfterChatFinishes": true,
+	"cursor.cpp.disabledLanguages": ["plaintext"],
+	"cursor.terminal.usePreviewBox": true,
+	"cursorpyright.analysis.autoImportCompletions": true,
+	"cursorpyright.analysis.inlayHints.functionReturnTypes": true,
+	"cursorpyright.analysis.inlayHints.variableTypes": true,
+	"cursorpyright.analysis.typeCheckingMode": "standard",
+	"cursorStats.currency": "JPY",
+	"cursorStats.showTotalRequests": true,
+
+	// windsurf
+	"windsurf.marketplaceExtensionGalleryServiceURL": "https://marketplace.visualstudio.com/_apis/public/gallery",
+	"windsurf.marketplaceGalleryItemURL": "https://marketplace.visualstudio.com/items",
+
+	// antigravity
+	"antigravity.marketplaceGalleryItemURL": "https://marketplace.visualstudio.com/items",
+	"antigravity.marketplaceExtensionGalleryServiceURL": "https://marketplace.visualstudio.com/_apis/public/gallery",
+
+	// ========================================================================
+	// Editor, UI
+	// ========================================================================
+
+	// -----------------------------------------------------------------
+	// テーマ・外観設定
+	"window.autoDetectColorScheme": true,
+	// "workbench.colorTheme": "Sleepy Sakura",
+	"workbench.preferredDarkColorTheme": "Moonlight II Italic",
+	"workbench.preferredLightColorTheme": "Pastel",
+	"workbench.productIconTheme": "Default",
+
+	"catppuccin.accentColor": "lavender",
+
+	// -----------------------------------------------------------------
+	// ファイル管理・自動保存
+	"files.autoSave": "afterDelay",
+	"files.autoSaveDelay": 1000,
+	"files.insertFinalNewline": true, // 1行追加
+	"files.trimFinalNewlines": true, // 空行の削除
+	"files.trimTrailingWhitespace": true,
+	"files.simpleDialog.enable": true,
+
+	// -----------------------------------------------------------------
+	// フォント・表示設定
+	"editor.fontSize": 13.5,
+	"editor.lineHeight": 1.5,
+	// 'PlemolJP35 Console NF', 'HackGen35 Console NF', 'Firge35Nerd Console', 'UDEV Gothic 35NF', 'Firge35Nerd Console'
+	// 'MonaspiceRn Nerd Font', Cica, Firple,
+	// x12y16pxMaruMonica, x14y24pxHeadUpDaisy
+	"editor.fontFamily": "'Maple Mono NF CN'",
+	// zero: 0をdotに、cv35: lを筆記体じゃない方に
+	"editor.fontLigatures": "'calt', 'cv06', 'cv61', 'cv38', 'cv41', 'ss07', 'ss08', 'ss09', 'ss10', 'ss11'",
+	"editor.fontWeight": 400,
+	// "editor.fontVariations": true,
+	"workbench.fontAliasing": "default",
+
+	// -----------------------------------------------------------------
+	// タブ・ウィンドウ管理
+	// "window.nativeTabs": true,
+
+	// タブ管理
+	"workbench.editor.showTabs": "multiple", // タブを改行
+	"workbench.editor.pinnedTabsOnSeparateRow": true, // ピン留めタブを別行に表示
+	"workbench.editor.scrollToSwitchTabs": true, //
+	"workbench.editor.tabActionLocation": "left",
+	"workbench.editor.highlightModifiedTabs": true,
+
+	"workbench.editor.wrapTabs": true,
+
+	// Zen Mode
+	"zenMode.showTabs": "single",
+	"zenMode.restore": false,
+	"zenMode.hideLineNumbers": true,
+
+	// タブ数制限
+	"workbench.editor.limit.enabled": false,
+	"workbench.editor.limit.perEditorGroup": true,
+	"workbench.editor.limit.value": 5,
+
+	// -----------------------------------------------------------------
+	// エディタ表示・ガイド設定
+	"editor.lineNumbers": "relative", // 上部空白
+	"editor.rulers": [72, 79, 99, 120], // ルーラー
+	"editor.wordSegmenterLocales": ["ja"],
+
+	"editor.bracketPairColorization.enabled": true, // Rainbow Brackets
+	"editor.guides.bracketPairs": "active",
+	"editor.renderLineHighlight": "all",
+
+	"editor.hover.sticky": true,
+	"editor.stickyScroll.enabled": true,
+
+	"editor.renderWhitespace": "all", // 空白表示
+	"editor.unicodeHighlight.invisibleCharacters": true,
+
+	// folding
+	"editor.showFoldingControls": "always",
+
+	// minimap
+	"editor.minimap.enabled": true,
+	"editor.minimap.showSlider": "always",
+	"editor.minimap.size": "proportional",
+	"editor.minimap.scale": 1,
+	"editor.minimap.maxColumn": 80,
+
+	// inline diff
+	"diffEditor.useInlineViewWhenSpaceIsLimited": true,
+	"diffEditor.experimental.useTrueInlineView": true,
+	"diffEditor.ignoreTrimWhitespace": true,
+
+	// cursor
+	// "editor.cursorBlinking": "expand",
+	// "editor.cursorSmoothCaretAnimation": "explicit",
+	"editor.cursorStyle": "line",
+	"editor.smoothScrolling": true,
+	"workbench.list.smoothScrolling": true,
+
+	// -----------------------------------------------------------------
+	// コード編集・補完・フォーマット
+	"editor.inlineSuggest.enabled": true, // インライン候補表示
+	"editor.suggestSelection": "first",
+	"editor.tabCompletion": "on",
+
+	"editor.multiCursorModifier": "ctrlCmd",
+	"editor.wordSeparators": "`~!@#%^&*()=+[{]}\\|;:'\",.<>/?",
+
+	// 整形法則
+	"editor.formatOnSave": true,
+	"editor.tabSize": 4,
+	"editor.codeActionsOnSave": {
+
+		"source.fixAll": "explicit",
+		"source.organizeImports": "explicit"
+	},
+
+	// -----------------------------------------------------------------
+	// エクスプローラー・UI操作
+	"explorer.confirmDelete": false,
+	"explorer.confirmDragAndDrop": false,
+	"explorer.sortOrder": "type",
+	"workbench.tree.expandMode": "singleClick",
+
+	"explorer.compactFolders": false, // ディレクトリのコンパクト表示無効化
+
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.expand": false,
+
+	// "workbench.tree.indent": 10,
+	// "workbench.sideBar.location": "right",
+
+	// -----------------------------------------------------------------
+	// ターミナル設定
+	"terminal.integrated.tabs.enabled": true,
+	"terminal.integrated.cursorBlinking": true,
+	// "terminal.integrated.cursorStyle": "line",
+	"terminal.integrated.fontWeight": "300",
+	"terminal.integrated.persistentSessionReviveProcess": "never",
+	"terminal.integrated.enableVisualBell": true,
+
+	// -----------------------------------------------------------------
+	// Git設定
+	"git.autofetch": true,
+	"git.untrackedChanges": "separate",
+
+	"git.blame.editorDecoration.enabled": true,
+	"git.blame.statusBarItem.enabled": true,
+
+	"gitlens.statusBar.format": "${author}, ${agoOrDate}${' via  'pullRequest}",
+	"gitlens.statusBar.alignment": "right",
+	"gitlens.gitkraken.cli.integration.enabled": true,
+
+	// Gitlens
+	"gitlens.ai.model": "gitkraken",
+	"gitlens.ai.vscode.model": "copilot:claude-3.7-sonnet",
+	"gitlens.ai.gitkraken.model": "gemini:gemini-2.0-flash",
+	"gitlens.launchpad.indicator.enabled": false,
+
+	"scm.diffDecorationsGutterWidth": 5,
+	"scm.alwaysShowRepositories": true,
+	"scm.defaultViewMode": "tree",
+	"scm.graph.badges": "all",
+	"scm.inputFontSize": 14,
+
+	// -----------------------------------------------------------------
+	// Vim
+
+	"vim.insertModeKeyBindings": [
+		{
+			"before": ["j", "j"],
+			"after": ["<Esc>"]
+		}
+	],
+	"vim.hlsearch": true,
+	"vim.highlightedyank.enable": true,
+	"vim.easymotion": true,
+	"vim.leader": " ",
+	"vim.enableNeovim": true,
+	// "workbench.commandPalette.experimental.suggestCommands": true,
+
+	// ========================================================================
+	// Extensions
+	// ========================================================================
+	"extensions.autoUpdate": "onlyEnabledExtensions",
+	"workbench.activityBar.orientation": "horizontal",
+	"vscode-pets.theme": "beach",
+
+	// 🚨Error Lens ------------------
+	// スタイリング
+	"errorLens.enabled": true,
+	"errorLens.messageEnabled": true,
+	// "errorLens.codeLensEnabled": true,
+	// "errorLens.followCursor": "activeLine",
+	"errorLens.followCursorMore": 2,
+	"errorLens.messageBackgroundMode": "message",
+
+	"errorLens.gutterIconsEnabled": true, // 行番号横のアイコン
+	"errorLens.gutterIconSet": "default",
+	"errorLens.statusBarMessageEnabled": true,
+	"errorLens.statusBarIconsEnabled": true,
+	"errorLens.statusBarColorsEnabled": true,
+
+	"errorLens.fontSize": "-2px",
+	"errorLens.fontStyleItalic": true,
+	// "errorLens.fontFamily": "'ヒラギノ角ゴ StdN'",
+	"errorLens.messageTemplate": "$severity $message",
+	"errorLens.severityText": ["■", "■", "■", "■"],
+	"errorLens.padding": "1px 2ch",
+	"errorLens.borderRadius": "0.5em",
+	/* "errorLens.border": [
+		"2px solid",
+		"1px dotted",
+		"1px dashed",
+		"1px solid #00000040"
+	], */
+	"errorLens.problemRangeDecorationEnabled": false,
+	"errorLens.decorations": {
+		"warningMessage": {},
+		"errorMessage": {},
+		"infoMessage": {}
+	},
+
+	// メッセージ制御
+	"errorLens.replace": [
+		{
+			"matcher": "Missing return type on (.+)",
+			"message": "Type $1"
+		}
+	],
+	"errorLens.excludeByMessage": [],
+	"errorLens.excludeBySource": [],
+
+	// Spotify
+	"spotify.showLyricsButton": false,
+	"spotify.showSignOutButton": false,
+	"spotify.showSignInButton": false,
+	"spotify.showMuteUnmuteVolumeButton": false,
+	"sync.autoUpload": false,
+	"projectManager.git.baseFolders": ["~/Documents/02_codes/"],
+
+	// background
+	"background.windowBackgrounds": [
+		"/Users/saqula/Documents/Oumis Library.library/images/ME1OESLRZ6I5X.info/Media posts by おせと \\(@osetoiro\\)  X.jpg"
+	],
+	"background.backgroundOpacity": [0.08, 0.1, 0.1, 0.1],
+	"background.backgroundBlur": ["0", "0", "0", "0"],
+	"background.backgroundChangeTime": [1200, 0, 0, 0],
+	"background.autoInstall": false,
+	"background.backgroundAlignment": [
+		"Center Center",
+		"Center Center",
+		"Center Center",
+		"Center Center"
+	],
+	"background.smoothImageRendering": true,
+
+	"vscode_custom_css.imports": [
+		"file:///Users/saqula/.vscode/extensions/yesitsfebreeze.smearcursor-1.3.0/_smearcursor.js"
+	],
+	"smearcursor.max_length": 1000,
+	"glowrays.enable": true,
+	"glowrays.GlowOnDefinitionNames": true,
+	"glowrays.advancedMode": true,
+
+	"glowrays.intensity": 5,
+	"glowrays.includeLanguages": ["*"],
+	"glowrays.excludeLanguages": [],
+	"glowrays.disableOnErrors": true,
+	"glowrays.dynamic.config": "3 8 5 false",
+	"glowrays.pauseAnimationWhileTyping": false,
+
+	// phicolors
+	"backgroundPhiColors.lineEnabled": false,
+	"backgroundPhiColors.blankLinesAlpha": 30,
+	"backgroundPhiColors.blankLinesEnabled": true,
+	"backgroundPhiColors.blankLinesInOverviewRulerLane": "left",
+	"backgroundPhiColors.tokenMode": "none",
+	"backgroundPhiColors.indentMode": "light",
+
+	// better comments
+	"better-comments.tags": [
+		{
+			"tag": "!",
+			"color": "#FF2D00",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "?",
+			"color": "#3498DB",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "//",
+			"color": "#474747",
+			"strikethrough": true,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "todo",
+			"color": "#FF8C00",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "*",
+			"color": "#98C379",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		}
+	],
+
+	// project manager
+	"projectManager.groupList": true,
+
+	// paste image
+	"pasteImage.basePath": "${currentFileDir}/.saqula/image/",
+
+	// ai
+	"github.copilot.editor.enableAutoCompletions": false,
+	"roo-cline.allowedCommands": [
+		"npm test",
+		"npm install",
+		"tsc",
+		"git log",
+		"git diff",
+		"git show"
+	],
+	"github.copilot.selectedCompletionModel": "gpt-4o-copilot",
+
+	// ========================================================================
+	// Languages
+	// ========================================================================
+
+	"mise.checkForNewMiseVersion": false,
+	"mise.binPath": "/etc/profiles/per-user/saqula/bin/mise",
+
+	/*
+	 * Python
+	 */
+	"ruff.nativeServer": "on",
+	"ruff.lint.preview": true,
+	"ruff.lineLength": 120,
+	"ruff.format.preview": true,
+
+	"ty.interpreter": ["/**/.venv"],
+	"python.languageServer": "Default",
+
+	"notebook.output.wordWrap": true,
+	"notebook.output.textLineLimit": 200,
+	"notebook.formatOnSave.enabled": true,
+	"notebook.codeActionsOnSave": {
+		// "notebook.source.fixAll": "explicit",
+		// "notebook.source.organizeImports": "explicit"
+	},
+	"jupyter.debugJustMyCode": false,
+	"python.testing.pytestEnabled": true,
+	"python.testing.pytestArgs": ["tests"],
+	"[python]": {
+		"editor.defaultFormatter": "charliermarsh.ruff",
+		"editor.codeActionsOnSave": {
+			"source.fixAll": "explicit",
+			"source.organizeImports": "explicit"
+		}
+	},
+	"python.analysis.addHoverSummaries": true,
+	"python.analysis.autoFormatStrings": true,
+	"python.analysis.autoImportCompletions": true,
+	"python.analysis.inlayHints.functionReturnTypes": true,
+	"python.analysis.inlayHints.pytestParameters": true,
+	"python.analysis.inlayHints.variableTypes": true,
+	"python.analysis.typeCheckingMode": "standard",
+
+	// markdown
+	"markdown.occurrencesHighlight.enabled": true,
+	"markdown.extension.completion.enabled": true,
+	"markdown.extension.list.indentationSize": "inherit",
+	"markdown.extension.preview.autoShowPreviewToSide": false,
+	"markdown.extension.toc.levels": "2..6",
+	"[markdown]": {
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": true,
+		"editor.defaultFormatter": "yzhang.markdown-all-in-one"
+	},
+
+	// marp
+	"markdown.marp.exportType": "pptx",
+	"markdown.marp.pptx.editable": "smart",
+	"markdown.marp.themes": [
+		"https://rainbowflesh.github.io/css/rose-pine-dawn.css",
+		"https://rainbowflesh.github.io/css/rose-pine-moon.css",
+		"https://rainbowflesh.github.io/css/rose-pine.css"
+	],
+
+	// biome
+	"biome.experimental.rename": true,
+	"biome.lsp.bin": {
+		"darwin-arm64": "biome"
+	},
+	"[astro]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "biomejs.biome",
+		"editor.formatOnSave": true
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+
+	// ========================================================================
+	// 除外設定
+	// ========================================================================
+	"files.exclude": {
+		"**/*.egg-info": true,
+		"**/htmlcov": true,
+		"**/~$*": true,
+		"**/.coverage.*": true,
+		// "**/.venv": true,
+		"**/__pycache__": true,
+		"**/.mypy_cache": true,
+		"**/.ruff_cache": true,
+		"**/.pytest_cache": true
+	},
+	"explorer.excludeGitIgnore": false,
+
+	"search.exclude": {
+		"**/*.snap": true,
+		"**/*.svg": true,
+		"**/.git": true,
+		"**/.github": false,
+		"**/.nuxt": true,
+		"**/.output": true,
+		"**/.pnpm": true,
+		"**/.vscode": true,
+		"**/.yarn": true,
+		"**/assets": true,
+		"**/bower_components": true,
+		"**/dist/**": true,
+		"**/logs": true,
+		"**/node_modules": true,
+		"**/out/**": true,
+		"**/package-lock.json": true,
+		"**/pnpm-lock.yaml": true,
+		"**/public": true,
+		"**/temp": true,
+		"**/yarn.lock": true,
+		"**/CHANGELOG*": true,
+		"**/LICENSE*": true
+	},
+
+	// ------------------------------------------------------------------------
+	"cursor.windowSwitcher.sidebarHoverCollapsed": true,
+	"sync.gist": "d32c4e52f42c2fa5d5379ab19cf87de0",
+	"sync.autoDownload": true,
+
+	"[html]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"editor.largeFileOptimizations": false,
+
+	"github.copilot.nextEditSuggestions.enabled": true,
+	"workbench.iconTheme": "material-icon-theme",
+	"vsicons.dontShowNewVersionMessage": true,
+	"git.confirmSync": false,
+
+	"lean4.alwaysAskBeforeInstallingLeanVersions": true,
+	"mdb.mcp.server": "prompt",
+	"explorer.confirmPasteNative": false,
+	"biome.enabled": true,
+	"roo-cline.deniedCommands": [],
+	"remote.SSH.remotePlatform": {
+		"oci-arm": "linux"
+	},
+	"nix.enableLanguageServer": true,
+	"nix.serverPath": "nil",
+	"json.schemaDownload.enable": true,
+	"redhat.telemetry.enabled": true,
+	"azureTerraform.survey": {
+		"surveyPromptDate": "never",
+		"surveyPromptIgnoredCount": 0
+	},
+	"dbcode.connections": [],
+	"claudeCode.preferredLocation": "panel",
+	"terminal.integrated.initialHint": false,
+	"chat.viewSessions.orientation": "stacked"
+
+	// ------------------------------------------------------------------------
+}

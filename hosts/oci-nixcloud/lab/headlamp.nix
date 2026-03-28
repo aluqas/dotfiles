@@ -3,7 +3,11 @@
 # Modern な Kubernetes web UI
 # https://headlamp.dev
 #
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   # Headlamp は Docker を必要とする
   virtualisation.docker.enable = true;
 
@@ -56,4 +60,17 @@
       sudo docker logs -f headlamp
     '')
   ];
+
+  # Headlamp 用の Tailscale サイドカー
+  services.tailscale-sidecar.instances.headlamp = {
+    enable = true;
+    backend = "docker";
+    authKeyFile = config.age.secrets.tailscale-auth-key.path;
+    serve = {
+      enable = true;
+      port = 443;
+      targetUrl = "http://localhost:4466";
+    };
+    waitFor = ["headlamp.service"];
+  };
 }

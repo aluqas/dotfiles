@@ -3,7 +3,11 @@
 # 開発者向けの Kubernetes deployment interface
 # https://cyclops-ui.com
 #
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   environment.systemPackages = with pkgs; [
     kubernetes-helm
     kubectl
@@ -69,5 +73,18 @@
       Type = "oneshot";
       RemainAfterExit = true;
     };
+  };
+
+  # Cyclops 用の Tailscale サイドカー
+  services.tailscale-sidecar.instances.cyclops = {
+    enable = true;
+    backend = "podman";
+    authKeyFile = config.age.secrets.tailscale-auth-key.path;
+    serve = {
+      enable = true;
+      port = 443;
+      targetUrl = "http://localhost:3000";
+    };
+    waitFor = ["cyclops-install.service"];
   };
 }

@@ -4,7 +4,7 @@
   username = "saqula"; # 希望の username に置き換える。
   # authorized_keys 用のブートストラップ / 緊急用鍵。
   # ホスト起動後の通常のリモート管理は Tailscale を想定する。
-  sshKey = (import ../../../lib/secrets.nix {}).keys.ssh.emergency;
+  sshKey = (import ../../lib/secrets.nix {}).keys.ssh.emergency;
   locale = "en_US.UTF-8";
   timezone = "Asia/Tokyo";
 
