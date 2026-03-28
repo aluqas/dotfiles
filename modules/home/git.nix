@@ -14,7 +14,7 @@ in {
       userName = "saqula";
       userEmail = "ping@saqu.la";
       signing = {
-        key = "S256:yRjkA01ttJW1nBQp0r1fkPv4eObJE/rmqw4TtFoMbFI";
+        key = "SHA256:yRjkA01ttJW1nBQp0r1fkPv4eObJE/rmqw4TtFoMbFI";
         signByDefault = true;
       };
 
