@@ -16,6 +16,12 @@
     mode = "400";
   };
 
+  age.secrets.komodo-env = saqulaLib.secrets.mkSecret {
+    name = "komodo-env";
+    owner = "root";
+    mode = "400";
+  };
+
   imports = [
     ./dokploy.nix
     ./komodo.nix

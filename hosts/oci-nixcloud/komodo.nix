@@ -17,16 +17,14 @@
     workDir = "/data/apps/komodo";
     extraDirs = ["backups"];
 
+    environmentFiles = [config.age.secrets.komodo-env.path];
+
     environment = {
       COMPOSE_KOMODO_IMAGE_TAG = "latest";
       COMPOSE_KOMODO_BACKUPS_PATH = "/data/apps/komodo/backups";
 
       # DB credentials
       KOMODO_DB_USERNAME = "admin";
-      KOMODO_DB_PASSWORD = "komodo_secure_password_2024";
-
-      # Core / Periphery 認証用の passkey
-      KOMODO_PASSKEY = "komodo_passkey_secure_2024";
 
       # Timezone
       TZ = "Asia/Tokyo";
