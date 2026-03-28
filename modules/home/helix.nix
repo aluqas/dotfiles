@@ -5,7 +5,7 @@
 }: let
   cfg = config.saqula.home.helix;
 in {
-  options.saqula.home.helix.enable = lib.mkEnableOption "helix editor configuration";
+  options.saqula.home.helix.enable = lib.mkEnableOption "helix editor configuration" // { default = true; };
 
   config = lib.mkIf cfg.enable {
     programs.helix = {

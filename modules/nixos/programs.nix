@@ -11,9 +11,10 @@
   ...
 }: let
   cfg = config.saqula.core.programs;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.core.programs = mkFeatureOptionsExt "NixOS program integrations" {
+  options.saqula.core.programs = {
+    enable = lib.mkEnableOption "NixOS program integrations";
     shell = lib.mkOption {
       type = lib.types.nullOr (lib.types.enum ["fish"]);
       default = null;
@@ -28,7 +29,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       programs = {
         # ユーザー mount 用の FUSE (impermanence)
         fuse.userAllowOther = true;

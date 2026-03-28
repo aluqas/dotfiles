@@ -6,10 +6,10 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.kubevirt;
-  inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
   options.saqula.system.services.k3s.kubevirt =
-    mkFeatureOptions "KubeVirt (Kubernetes Virtualization)";
+    { enable = lib.mkEnableOption "KubeVirt (Kubernetes Virtualization)"; };
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -18,7 +18,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       environment.systemPackages = with pkgs; [
         kubevirt # virtctl
       ];

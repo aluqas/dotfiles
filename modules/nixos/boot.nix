@@ -11,9 +11,10 @@
   ...
 }: let
   cfg = config.saqula.core.boot;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.core.boot = mkFeatureOptionsExt "common boot configuration" {
+  options.saqula.core.boot = {
+    enable = lib.mkEnableOption "common boot configuration";
     enableSystemdInitrd = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -36,7 +37,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg (lib.mkMerge [
+    (lib.mkIf cfg.enable (lib.mkMerge [
       {
         boot.initrd.systemd.enable = cfg.enableSystemdInitrd;
         systemd.targets.multi-user.enable = true;

@@ -11,10 +11,11 @@
 }: let
   cfg = config.saqula.system.services.k3s.rancher;
   k3sCfg = config.saqula.system.services.k3s;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkOption types mkEnableOption;
 in {
-  options.saqula.system.services.k3s.rancher = mkFeatureOptionsExt "Rancher Kubernetes Management" {
+  options.saqula.system.services.k3s.rancher = {
+    enable = lib.mkEnableOption "Rancher Kubernetes Management";
     hostname = mkOption {
       type = types.str;
       default = "rancher";
@@ -36,7 +37,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg (lib.mkIf k3sCfg.enable {
+    (lib.mkIf cfg.enable (lib.mkIf k3sCfg.enable {
       # Helm で Rancher をデプロイする
       systemd.services.rancher-deploy = {
         description = "Deploy Rancher to K3s (Helm)";

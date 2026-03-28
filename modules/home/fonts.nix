@@ -7,7 +7,7 @@
   cfg = config.saqula.home.fonts;
 in {
   options.saqula.home.fonts = {
-    enable = lib.mkEnableOption "font packages";
+    enable = lib.mkEnableOption "font packages" // { default = true; };
 
     packages = lib.mkOption {
       type = lib.types.listOf lib.types.package;

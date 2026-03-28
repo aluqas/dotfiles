@@ -5,19 +5,15 @@
   ...
 }: let
   cfg = config.saqula.home.neovim;
-  neovimConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/neovim/nvim-lazy";
+  # neovimConfigPath = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/modules/home/neovim/nvim-lazy";
 in {
-  options.saqula.home.neovim.enable = lib.mkEnableOption "neovim configuration";
+  options.saqula.home.neovim.enable = lib.mkEnableOption "neovim configuration" // { default = true; };
 
   config = lib.mkIf cfg.enable {
-    programs.neovim = {
-      enable = true;
-      defaultEditor = true;
-      viAlias = true;
-      vimAlias = true;
-    };
+    imports = [
+      inputs.kickstart-nixvim.darwinModules.default
+    ];
 
-    home.sessionVariables.NVIM_APPNAME = "nvim-lazy";
-    home.file.".config/nvim-lazy".source = neovimConfigPath;
-  };
+    programs.nixvim.enable = true;
+  }
 }

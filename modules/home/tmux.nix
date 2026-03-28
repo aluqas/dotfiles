@@ -6,7 +6,7 @@
 }: let
   cfg = config.saqula.home.tmux;
 in {
-  options.saqula.home.tmux.enable = lib.mkEnableOption "tmux configuration";
+  options.saqula.home.tmux.enable = lib.mkEnableOption "tmux configuration" // { default = true; };
 
   config = lib.mkIf cfg.enable {
     programs.tmux = {

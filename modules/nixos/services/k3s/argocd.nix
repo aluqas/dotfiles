@@ -6,11 +6,11 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.argocd;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit (lib) mkOption types optionalString mkIf;
 in {
-  # hybrid merge を避けつつ mkFeatureOptionsExt をきれいに使う
-  options.saqula.system.services.k3s.argocd = mkFeatureOptionsExt "Argo CD GitOps" {
+  options.saqula.system.services.k3s.argocd = {
+    enable = lib.mkEnableOption "Argo CD GitOps";
     ingressHost = mkOption {
       type = types.str;
       default = "argocd.fairy-sargas.ts.net";
@@ -45,7 +45,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       environment.systemPackages = with pkgs; [
         kubernetes-helm
         kubectl

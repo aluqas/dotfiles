@@ -16,7 +16,7 @@
 }: let
   cfg = config.saqula.system.services.container.runtimes;
   containerdCfg = config.saqula.system.services.container.containerd;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit
     (lib)
     mkOption
@@ -26,8 +26,8 @@
     ;
 in {
   options.saqula.system.services.container.runtimes =
-    mkFeatureOptionsExt "Container Runtimes (Youki, Crun, Kata, gVisor)"
     {
+      enable = lib.mkEnableOption "Container Runtimes (Youki, Crun, Kata, gVisor)";
       youki.enable = mkOption {
         type = types.bool;
         default = true;
@@ -66,7 +66,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg (
+    (lib.mkIf cfg.enable (
       lib.mkIf containerdCfg.enable {
         # Runtime packages
         environment.systemPackages = with pkgs;

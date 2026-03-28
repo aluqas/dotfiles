@@ -11,7 +11,7 @@
   ...
 }: let
   cfg = config.saqula.core.network.tailscale;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 
   # フラグを組み立てるロジック
   advertiseRouteFlags =
@@ -33,7 +33,8 @@
     then ["--accept-routes"]
     else ["--accept-routes=false"];
 in {
-  options.saqula.core.network.tailscale = mkFeatureOptionsExt "Tailscale networking" {
+  options.saqula.core.network.tailscale = {
+    enable = lib.mkEnableOption "Tailscale networking";
     authKeyFile = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
@@ -90,7 +91,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg (
+    (lib.mkIf cfg.enable (
       lib.mkMerge [
         {
           services.tailscale = {

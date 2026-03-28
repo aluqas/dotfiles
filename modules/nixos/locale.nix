@@ -11,9 +11,10 @@
   ...
 }: let
   cfg = config.saqula.core.locale;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.core.locale = mkFeatureOptionsExt "locale and timezone configuration" {
+  options.saqula.core.locale = {
+    enable = lib.mkEnableOption "locale and timezone configuration";
     timezone = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
@@ -43,7 +44,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg (lib.mkMerge [
+    (lib.mkIf cfg.enable (lib.mkMerge [
       (lib.mkIf (cfg.timezone != null) {
         time.timeZone = cfg.timezone;
       })

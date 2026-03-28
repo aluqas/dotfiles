@@ -14,18 +14,6 @@
       inherit isDarwin username;
     };
 
-    mkFeatureOptions = description: {
-      enable = lib.mkEnableOption description;
-    };
-
-    mkFeatureOptionsExt = description: extraOptions:
-      {
-        enable = lib.mkEnableOption description;
-      }
-      // extraOptions;
-
-    wrapConfig = cfg: content: lib.mkIf cfg.enable content;
-
     mkPlatformAssert = {
       name,
       platforms,

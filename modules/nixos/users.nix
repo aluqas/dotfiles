@@ -11,9 +11,10 @@
   ...
 }: let
   cfg = config.saqula.core.users;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.core.users = mkFeatureOptionsExt "user management (NixOS)" {
+  options.saqula.core.users = {
+    enable = lib.mkEnableOption "user management (NixOS)";
     username = lib.mkOption {
       type = lib.types.str;
       description = "主要ユーザー名";
@@ -54,7 +55,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       users = {
         mutableUsers = false;
         groups.${cfg.username} = {};

@@ -11,7 +11,7 @@
   ...
 }: let
   cfg = config.saqula.system.services.k3s.runtimes;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   inherit
     (lib)
     mkOption
@@ -20,9 +20,8 @@
     optionalString
     ;
 in {
-  options.saqula.system.services.k3s.runtimes =
-    mkFeatureOptionsExt "K3s containerd runtimes（Youki, Crun, Kata, gVisor）"
-    {
+  options.saqula.system.services.k3s.runtimes = {
+    enable = lib.mkEnableOption "K3s containerd runtimes（Youki, Crun, Kata, gVisor）";
       youki.enable = mkOption {
         type = types.bool;
         default = true;
@@ -55,7 +54,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # runtime パッケージ
       environment.systemPackages = with pkgs;
         [

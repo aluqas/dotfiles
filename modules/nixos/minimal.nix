@@ -11,9 +11,10 @@
   ...
 }: let
   cfg = config.saqula.core.minimal;
-  inherit (saqulaLib) mkFeatureOptionsExt mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.core.minimal = mkFeatureOptionsExt "minimal server profile" {
+  options.saqula.core.minimal = {
+    enable = lib.mkEnableOption "minimal server profile";
     disableDocumentation = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -34,7 +35,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg (lib.mkMerge [
+    (lib.mkIf cfg.enable (lib.mkMerge [
       (lib.mkIf cfg.disableDocumentation {
         documentation.enable = false;
       })

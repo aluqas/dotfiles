@@ -6,9 +6,9 @@
   ...
 }: let
   cfg = config.saqula.system.services.container.podman;
-  inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
 in {
-  options.saqula.system.services.container.podman = mkFeatureOptions "Podman container runtime";
+  options.saqula.system.services.container.podman = { enable = lib.mkEnableOption "Podman container runtime"; };
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -17,7 +17,7 @@ in {
       inherit pkgs;
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # Podman / containers persistence（impermanence 有効時）
       environment.persistence."/persist".directories = [
         "/var/lib/containers"

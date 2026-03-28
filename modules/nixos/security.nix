@@ -12,12 +12,12 @@
   ...
 }: let
   cfg = config.saqula.core.security;
-  inherit (saqulaLib) mkFeatureOptions mkPlatformAssert wrapConfig;
+  inherit (saqulaLib) mkPlatformAssert;
   secrets = saqulaLib.secrets;
   sshDir = secrets.sshDir;
   knownHosts = "${sshDir}/known_hosts";
 in {
-  options.saqula.core.security = mkFeatureOptions "NixOS security integrations";
+  options.saqula.core.security = { enable = lib.mkEnableOption "NixOS security integrations"; };
 
   config = lib.mkMerge [
     (mkPlatformAssert {
@@ -56,7 +56,7 @@ in {
       '';
     })
 
-    (wrapConfig cfg {
+    (lib.mkIf cfg.enable {
       # =========================================================================
       # GPG 設定 (NixOS)
       # =========================================================================

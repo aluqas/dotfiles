@@ -28,7 +28,7 @@
 
   cursorMcpConfig = {inherit (mcpServers) mcpServers;};
 in {
-  options.saqula.home.mcp.enable = lib.mkEnableOption "MCP server configurations";
+  options.saqula.home.mcp.enable = lib.mkEnableOption "MCP server configurations" // { default = true; };
 
   config = lib.mkIf cfg.enable {
     home.file =
