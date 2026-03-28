@@ -12,7 +12,6 @@
       then subdir
       else builtins.toString ./.
   );
-  env.GREET = "Antigravity Nix Environment";
 
   imports = [
     ./templates/nix/devenv.nix
@@ -27,10 +26,10 @@
     # pkgs.comma
 
     pkgs.alejandra
-    pkgs.prettier
+    # pkgs.prettier
     pkgs.taplo
     pkgs.shellcheck
-    pkgs.typos
+    # pkgs.typos
     pkgs.actionlint
     # pkgs.nixfmt
     pkgs.statix
@@ -91,33 +90,7 @@
     lint
     nix flake show --show-trace > /dev/null
   '';
-  scripts."shellcheck-hook".exec = ''
-    set -euo pipefail
 
-    if [ "$#" -eq 0 ]; then
-      exit 0
-    fi
-
-    shellcheck "$@"
-  '';
-  scripts."typos-hook".exec = ''
-    set -euo pipefail
-
-    if [ "$#" -eq 0 ]; then
-      exit 0
-    fi
-
-    typos "$@"
-  '';
-  scripts."actionlint-hook".exec = ''
-    set -euo pipefail
-
-    if [ "$#" -eq 0 ]; then
-      exit 0
-    fi
-
-    actionlint "$@"
-  '';
   scripts."build-mac".exec = "nix build --dry-run .#darwinConfigurations.macbook.config.system.build.toplevel --no-link";
   scripts."switch-mac".exec = "nh darwin switch . -H macbook";
   #scripts."build-bootstrap".exec = "nix build --dry-run .#nixosConfigurations.nixos-bootstrap.config.system.build.toplevel --no-link";

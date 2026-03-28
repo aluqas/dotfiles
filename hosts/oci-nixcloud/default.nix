@@ -1,19 +1,35 @@
 {
   config,
   pkgs,
+  lib,
   hostVars,
   globalVars,
   ...
 }: {
   imports = [
-    ../../profiles/system/nixos-server.nix
-    ../../profiles/system/nixos-oci-node.nix
     ./hardware-configuration.nix
     ./disk-config.nix
     ./services.nix
   ];
 
+  saqula.secrets.enable = true;
+
   saqula.core = {
+    boot = {
+      enable = true;
+      kernelSysctl.ipForward = true;
+    };
+    programs = {
+      enable = true;
+      shell = "fish";
+    };
+    locale = {
+      enable = true;
+      inherit (hostVars) timezone;
+      inherit (hostVars) locale;
+    };
+    impermanence.enable = false;
+    optimization.enable = true;
     network.tailscale = {
       enable = true;
       authKeyFile = config.age.secrets.tailscale-auth-key.path;
@@ -24,7 +40,6 @@
       ssh = true;
       advertiseTags = ["tag:server"];
     };
-
     users = {
       enable = true;
       inherit (hostVars) username;
@@ -37,20 +52,45 @@
       authorizedKeys = [hostVars.sshKey];
       passwordlessSudo = true;
     };
+  };
 
-    boot = {
-      enable = true;
-      kernelSysctl.ipForward = true;
+  saqula.home.impermanence.enable = true;
+  saqula.system.btrbk.enable = true;
+  saqula.devex.cachix = {
+    enable = true;
+    push.enable = true;
+  };
+
+  networking = {
+    hostName = hostVars.hostname;
+    firewall = {
+      enable = lib.mkDefault true;
+      allowedTCPPorts = [22];
+    };
+    networkmanager.enable = lib.mkDefault true;
+  };
+
+  boot.loader = {
+    systemd-boot.enable = lib.mkDefault true;
+    efi = {
+      canTouchEfiVariables = lib.mkDefault true;
+      efiSysMountPoint = lib.mkDefault "/boot";
     };
   };
 
-  networking.hostName = hostVars.hostname;
-  networking.firewall.allowedTCPPorts = [22];
+  nix.settings.experimental-features = lib.mkDefault [
+    "nix-command"
+    "flakes"
+  ];
+
   fileSystems."/persist".neededForBoot = true;
 
-  services.openssh.settings = {
-    PermitRootLogin = "prohibit-password";
-    PasswordAuthentication = false;
+  services.openssh = {
+    enable = lib.mkDefault true;
+    settings = {
+      PermitRootLogin = "prohibit-password";
+      PasswordAuthentication = false;
+    };
   };
 
   systemd.tmpfiles.rules = let
@@ -65,7 +105,6 @@
   ];
 
   virtualisation.docker.daemon.settings.data-root = hostVars.disks.blockStorage.paths.docker;
-
   virtualisation.containers.storage.settings.storage.graphroot = hostVars.disks.blockStorage.paths.podman;
 
   saqula.system.services.k3s.k3s.extraFlags = [

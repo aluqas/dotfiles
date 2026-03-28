@@ -10,12 +10,6 @@ repos:
         language: system
         types:
           - shell
-      - id: typos
-        name: typos
-        entry: devenv --impure shell typos-hook
-        language: system
-        types:
-          - text
       - id: actionlint
         name: actionlint
         entry: devenv --impure shell actionlint-hook

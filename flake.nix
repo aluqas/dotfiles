@@ -32,9 +32,7 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
-
     flake-root.url = "github:srid/flake-root";
-
     flake-utils.url = "github:numtide/flake-utils";
 
     # treefmt-nix.url = "github:numtide/treefmt-nix";
@@ -123,8 +121,6 @@
               system = "aarch64-darwin";
               hostPath = ./hosts/macbook;
               homeImports = [
-                ./profiles/home/stylix
-                ./profiles/home/develop.nix
                 ./hosts/macbook/home.nix
               ];
             };
@@ -135,8 +131,7 @@
               system = "aarch64-linux";
               hostPath = ./hosts/nixos-bootstrap;
               homeImports = [
-                ./profiles/home/stylix
-                ./profiles/home/develop.nix
+                ./hosts/nixos-bootstrap/home.nix
               ];
             };
 
@@ -144,9 +139,7 @@
               system = "aarch64-linux";
               hostPath = ./hosts/oci-nixcloud;
               homeImports = [
-                ./profiles/home/stylix
-                ./profiles/home/develop.nix
-                ./profiles/home/infra.nix
+                ./hosts/oci-nixcloud/home.nix
               ];
             };
           };

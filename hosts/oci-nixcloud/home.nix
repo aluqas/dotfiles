@@ -17,9 +17,6 @@
     ../../modules/home/gpg.nix
     ../../modules/home/fish.nix
     ../../modules/home/starship.nix
-    ../../modules/home/alacritty.nix
-    ../../modules/home/fonts.nix
-    ../../modules/home/vscode.nix
-    ../../modules/home/spicetify.nix
+    ../../modules/home/tooling.nix
   ];
 }
