@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ../../modules/home/alacritty.nix
     ../../modules/home/fonts.nix

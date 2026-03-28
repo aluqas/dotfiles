@@ -3,11 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.saqula.home.fonts;
-in
-{
+in {
   options.saqula.home.fonts = {
     enable = lib.mkEnableOption "font packages";
 

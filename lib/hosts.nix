@@ -126,7 +126,11 @@
       inherit (def) system;
       inherit specialArgs;
       modules =
-        (if isDarwin then darwinModules else nixosModules)
+        (
+          if isDarwin
+          then darwinModules
+          else nixosModules
+        )
         ++ extraModules
         ++ [
           baseNixpkgsModule

@@ -3,11 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.saqula.home.git;
-in
-{
+in {
   options.saqula.home.git.enable = lib.mkEnableOption "git configuration";
 
   config = lib.mkIf cfg.enable {

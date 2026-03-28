@@ -10,7 +10,7 @@
 #   keys = (import ../lib/secrets.nix {}).keys;
 #
 {
-  root ? ./.. ,
+  root ? ./..,
   isDarwin ? false,
   username ? "saqula",
 }: let

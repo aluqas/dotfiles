@@ -3,11 +3,9 @@
   lib,
   repoRoot,
   ...
-}:
-let
+}: let
   cfg = config.saqula.home.spicetify;
-in
-{
+in {
   options.saqula.home.spicetify.enable = lib.mkEnableOption "spicetify configuration";
 
   config = lib.mkIf cfg.enable {

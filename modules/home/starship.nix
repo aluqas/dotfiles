@@ -2,11 +2,9 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.saqula.home.starship;
-in
-{
+in {
   options.saqula.home.starship.enable = lib.mkEnableOption "starship prompt configuration";
 
   config = lib.mkIf cfg.enable {

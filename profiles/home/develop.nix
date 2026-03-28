@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ../../modules/home/agent/agent.nix
     ../../modules/home/agent/mcp.nix

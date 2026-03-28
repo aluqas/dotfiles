@@ -3,11 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.saqula.home.env;
-in
-{
+in {
   options.saqula.home.env.enable = lib.mkEnableOption "development environment tools";
 
   config = lib.mkIf cfg.enable {
