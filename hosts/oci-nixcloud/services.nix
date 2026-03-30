@@ -16,6 +16,18 @@
     mode = "400";
   };
 
+  age.secrets.coolify-secrets = saqulaLib.secrets.mkSecret {
+    name = "coolify-secrets";
+    owner = "root";
+    mode = "400";
+  };
+
+  age.secrets.komodo-secrets = saqulaLib.secrets.mkSecret {
+    name = "komodo-secrets";
+    owner = "root";
+    mode = "400";
+  };
+
   imports = [
     ./dokploy.nix
     ./komodo.nix
