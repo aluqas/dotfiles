@@ -21,6 +21,15 @@ with lib; let
     options = {
       enable = mkEnableOption "Compose Service Instance";
 
+      backend = mkOption {
+        type = types.enum [
+          "docker"
+          "podman"
+        ];
+        default = "docker";
+        description = "使う compose backend";
+      };
+
       workDir = mkOption {
         type = types.str;
         default = "/var/lib/${name}";
@@ -74,7 +83,8 @@ in {
   };
 
   config = mkIf (cfg.instances != {}) {
-    virtualisation.docker.enable = true;
+    virtualisation.docker.enable = mkIf (any (instance: instance.enable && instance.backend == "docker") (attrValues cfg.instances)) true;
+    virtualisation.podman.enable = mkIf (any (instance: instance.enable && instance.backend == "podman") (attrValues cfg.instances)) true;
 
     # directory 用の tmpfiles ルールを作る
     systemd.tmpfiles.rules = flatten (
@@ -95,20 +105,28 @@ in {
         inherit name;
         value = mkIf instance.enable {
           description = "Docker Compose Service: ${name}";
-          after = [
-            "docker.service"
-            "network-online.target"
-          ];
-          requires = ["docker.service"];
-          wants = ["network-online.target"];
+          after =
+            lib.optionals (instance.backend == "docker") ["docker.service"]
+            ++ lib.optionals (instance.backend == "podman") ["podman.socket"]
+            ++ ["network-online.target"];
+          requires = lib.optionals (instance.backend == "docker") ["docker.service"];
+          wants = lib.optionals (instance.backend == "podman") ["podman.socket"] ++ ["network-online.target"];
           wantedBy = ["multi-user.target"];
 
-          path = with pkgs; [
-            docker
-            docker-compose
-            coreutils
-            openssl
-          ];
+          path =
+            with pkgs;
+              [
+                coreutils
+                openssl
+              ]
+              ++ lib.optionals (instance.backend == "docker") [
+                docker
+                docker-compose
+              ]
+              ++ lib.optionals (instance.backend == "podman") [
+                podman
+                podman-compose
+              ];
 
           script = ''
             # workdir を用意する
@@ -131,12 +149,12 @@ in {
 
             # service を開始する
             echo "Starting ${name}..."
-            docker compose up -d --remove-orphans
+            ${instance.backend} compose up -d --remove-orphans
           '';
 
           preStop = ''
             cd ${instance.workDir}
-            docker compose down
+            ${instance.backend} compose down
           '';
 
           serviceConfig = {
@@ -157,7 +175,7 @@ in {
       mapAttrsToList (name: instance: [
         (pkgs.writeScriptBin "${name}-logs" ''
           #!/usr/bin/env bash
-          cd ${instance.workDir} && sudo docker compose logs -f "$@"
+          cd ${instance.workDir} && sudo ${instance.backend} compose logs -f "$@"
         '')
         (pkgs.writeScriptBin "${name}-restart" ''
           #!/usr/bin/env bash
@@ -165,7 +183,7 @@ in {
         '')
         (pkgs.writeScriptBin "${name}-shell" ''
           #!/usr/bin/env bash
-          cd ${instance.workDir} && sudo docker compose exec "$@"
+          cd ${instance.workDir} && sudo ${instance.backend} compose exec "$@"
         '')
       ])
       cfg.instances

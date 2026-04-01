@@ -1,9 +1,6 @@
 # Komodo Container Management
 #
-# Docker container と stack の管理 platform
-# https://komo.do
-#
-# 完全機能には MongoDB 付きの Docker Compose を使う
+# Podman 上で Komodo Core / Periphery を動かす。
 #
 {config, ...}: {
   networking.firewall.allowedTCPPorts = [
@@ -11,9 +8,9 @@
     8120
   ];
 
-  # generic な Compose Service abstraction を使う
   services.compose-service.instances.komodo = {
     enable = true;
+    backend = "podman";
     workDir = "/data/apps/komodo";
     extraDirs = ["backups"];
 
@@ -21,17 +18,12 @@
       COMPOSE_KOMODO_IMAGE_TAG = "latest";
       COMPOSE_KOMODO_BACKUPS_PATH = "/data/apps/komodo/backups";
 
-      # DB credentials
       KOMODO_DB_USERNAME = "admin";
       KOMODO_DB_PASSWORD = "komodo_secure_password_2024";
-
-      # Core / Periphery 認証用の passkey
       KOMODO_PASSKEY = "komodo_passkey_secure_2024";
 
-      # Timezone
       TZ = "Asia/Tokyo";
 
-      # ローカル login を有効化する
       KOMODO_LOCAL_AUTH = "true";
       KOMODO_DISABLE_USER_REGISTRATION = "false";
     };
@@ -70,7 +62,7 @@
           restart: unless-stopped
           env_file: .env
           volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
+            - /run/podman/podman.sock:/var/run/docker.sock
             - /proc:/proc
             - /data/apps/komodo:/etc/komodo
 
@@ -80,10 +72,9 @@
     '';
   };
 
-  # generic な Tailscale Sidecar abstraction を使う
   services.tailscale-sidecar.instances.komodo = {
     enable = true;
-    backend = "podman"; # Komodo sidecar runs in Podman (backend container runs in Docker via compose-service)
+    backend = "podman";
     authKeyFile = config.age.secrets.tailscale-auth-key.path;
 
     serve = {
