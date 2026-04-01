@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ../../modules/home/stylix
     ../../modules/home/agent/agent.nix
@@ -8,6 +9,7 @@
     ../../modules/home/git.nix
     ../../modules/home/media.nix
     ../../modules/home/modern.nix
+    ../../modules/home/reversing.nix
     ../../modules/home/observability.nix
     ../../modules/home/system.nix
     ../../modules/home/helix.nix

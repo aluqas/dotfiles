@@ -3,19 +3,44 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.saqula.home.git;
-in {
-  options.saqula.home.git.enable = lib.mkEnableOption "git configuration" // {default = true;};
+in
+{
+  options.saqula.home.git.enable = lib.mkEnableOption "git configuration" // {
+    default = true;
+  };
 
   config = lib.mkIf cfg.enable {
     programs.git = {
       enable = true;
       userName = "saqula";
       userEmail = "ping@saqu.la";
-      signing = {
-        key = "SHA256:yRjkA01ttJW1nBQp0r1fkPv4eObJE/rmqw4TtFoMbFI";
-        signByDefault = true;
+      settings = {
+        signing = {
+          key = "SHA256:yRjkA01ttJW1nBQp0r1fkPv4eObJE/rmqw4TtFoMbFI";
+          signByDefault = true;
+        };
+        color = {
+          diff = "auto";
+          status = "auto";
+          branch = "auto";
+          interactive = "auto";
+          grep = "auto";
+          ui = "auto";
+        };
+        commit = {
+          gpgSign = false;
+          template = "~/.config/git/message";
+        };
+        tag.gpgSign = false;
+        gpg = {
+          format = "openpgp";
+          program = "gpg";
+        };
+        url."git@github.com:".insteadOf = "https://github.com/";
+        ghq.root = "~/Documents/02_codes";
       };
 
       ignores = [
@@ -44,27 +69,6 @@ in {
         "**/.cursor/.agent-tools"
         "**/.claude/settings.local.json"
       ];
-      extraConfig = {
-        color = {
-          diff = "auto";
-          status = "auto";
-          branch = "auto";
-          interactive = "auto";
-          grep = "auto";
-          ui = "auto";
-        };
-        commit = {
-          gpgSign = false;
-          template = "~/.config/git/message";
-        };
-        tag.gpgSign = false;
-        gpg = {
-          format = "openpgp";
-          program = "gpg";
-        };
-        url."git@github.com:".insteadOf = "https://github.com/";
-        ghq.root = "~/Documents/02_codes";
-      };
     };
 
     home.packages = with pkgs; [
