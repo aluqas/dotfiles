@@ -39,6 +39,12 @@ with lib; let
         description = ".env ファイルへ書き出す environment variable";
       };
 
+      environmentFiles = mkOption {
+        type = types.listOf types.path;
+        default = [];
+        description = ".env ファイルに追記する environment file の path の一覧";
+      };
+
       extraDirs = mkOption {
         type = types.listOf types.str;
         default = [];
@@ -119,6 +125,10 @@ in {
             cat > .env <<EOF
             ${concatStringsSep "\n" (mapAttrsToList (k: v: "${k}=${v}") instance.environment)}
             EOF
+            ${optionalString (instance.environmentFiles != []) ''
+            # append extra environment files
+            cat ${concatStringsSep " " instance.environmentFiles} >> .env || true
+            ''}
             chmod 600 .env
 
             # docker-compose.yml を更新する（宣言的）

@@ -29,4 +29,7 @@ in {
   # 生成先: https://login.tailscale.com/admin/settings/keys
   "tailscale-auth-key.age".publicKeys = allKeys;
   "tailscale-oauth-client-secret.age".publicKeys = allKeys;
+
+  # Komodo Container Management
+  "komodo-env.age".publicKeys = allKeys;
 }
