@@ -70,11 +70,14 @@
       docker network rm coolify 2>/dev/null || true
     '';
 
+    environmentFiles = [
+      config.age.secrets.coolify-secrets.path
+    ];
+
     environment = {
       APP_ID = "coolify-id";
       APP_NAME = "Coolify";
       APP_ENV = "production";
-      APP_KEY = "base64:8Tk/pcKueMdAhRv1CRc8owylsCd5EhjePgAFpwlPyJ0=";
       APP_URL = "http://localhost:8001";
       APP_DEBUG = "false";
       APP_PORT = "8001";
@@ -87,17 +90,14 @@
       DB_PORT = "5432";
       DB_DATABASE = "coolify";
       DB_USERNAME = "coolify";
-      DB_PASSWORD = "coolify_db_password_2024";
 
       REDIS_HOST = "coolify-redis";
-      REDIS_PASSWORD = "coolify_redis_password_2024";
       REDIS_PORT = "6379";
 
       PUSHER_HOST = "coolify.fairy-sargas.ts.net"; # Use Tailscale host for external access
       PUSHER_PORT = "6001";
       PUSHER_APP_ID = "coolify-pusher-id";
       PUSHER_APP_KEY = "coolify-pusher-key";
-      PUSHER_APP_SECRET = "coolify-pusher-secret-2024";
       PUSHER_SCHEME = "https"; # HTTPS via Tailscale
 
       MIX_PUSHER_APP_KEY = "coolify-pusher-key";
