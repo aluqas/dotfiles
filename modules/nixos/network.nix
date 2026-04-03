@@ -112,6 +112,8 @@ in {
             checkReversePath = "loose";
           };
 
+          systemd.services.tailscaled.serviceConfig.Restart = lib.mkForce "always";
+
           # Tailscale persistence（impermanence 有効時）
           environment.persistence."/persist".directories = [
             "/var/lib/tailscale"
