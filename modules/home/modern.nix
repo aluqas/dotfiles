@@ -10,31 +10,31 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      eza
-      lsd
-      bat
-      fd
-      ripgrep
-      sd
-      dust
-      duf
-      broot
-      uutils-coreutils
-      zoxide
-      fzf
-      skim
-      hexyl
-      jless
-      delta
-      tokei
-      hyperfine
-      bottom
-      procs
-      bandwhich
-      choose
-      grex
-      tealdeer
-      navi
+      eza # ls
+      lsd # ls
+      bat # cat
+      fd # find
+      ripgrep # grep
+      sd # sed
+      dust # du
+      duf # df
+      broot # tree
+      uutils-coreutils # coreutils
+      zoxide # cd
+      fzf # fuzzy finder
+      skim # fuzzy finder
+      hexyl # hex editor
+      jless # json viewer
+      delta # git diff
+      tokei # code statistics
+      hyperfine # benchmarking
+      bottom # system monitor
+      procs # process viewer
+      bandwhich # network monitor
+      choose # interactive selector
+      grex # regex generator
+      tealdeer # cheat sheet
+      navi # interactive cheatsheet
     ];
   };
 }

@@ -9,8 +9,7 @@
     ../../modules/home/git.nix
     ../../modules/home/media.nix
     ../../modules/home/modern.nix
-    ../../modules/home/reversing.nix
-    ../../modules/home/observability.nix
+    ../../modules/home/security.nix
     ../../modules/home/system.nix
     ../../modules/home/helix.nix
     ../../modules/home/neovim.nix
