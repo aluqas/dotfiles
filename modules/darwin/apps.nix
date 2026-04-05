@@ -5,12 +5,26 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.saqula.darwin.apps;
   inherit (lib) mkEnableOption mkIf;
   homeUser = hostVars.username or globalVars.defaultUser;
-  darwinFontCasks = lib.attrByPath ["home-manager" "users" homeUser "saqula" "home" "fonts" "darwinBrewCasks"] [] config;
-in {
+  darwinFontCasks =
+    lib.attrByPath
+      [
+        "home-manager"
+        "users"
+        homeUser
+        "saqula"
+        "home"
+        "fonts"
+        "darwinBrewCasks"
+      ]
+      [ ]
+      config;
+in
+{
   options.saqula.darwin.apps.enable = mkEnableOption "Darwin GUI applications";
 
   config = mkIf cfg.enable {
@@ -35,11 +49,14 @@ in {
       };
 
       casks = darwinFontCasks ++ [
-        # ブラウザ
-        "arc"
+        # "sideloadly" # playcover代替にもなるけどimpactorでいいかも
+        "impactor" # sidestore専用
+        "playcover-community"
+        "whisky" # wineつかったほうがいい
+
+        "openclaw"
         "zen"
         "vivaldi"
-        "chatgpt-atlas"
 
         "discord"
         "signal"
@@ -50,7 +67,6 @@ in {
         "anytype"
         "chatgpt"
         "claude"
-        "codex-app"
 
         "notion"
         "notion-calendar"
@@ -67,7 +83,6 @@ in {
         "google-drive"
         "google-japanese-ime"
         "proton-drive"
-        "proton-pass"
         "proton-mail"
 
         "jordanbaird-ice"
@@ -96,8 +111,6 @@ in {
         # "crossover"
         # "curseforge"
         "osu"
-        "playcover-community"
-        "whisky"
         "prismlauncher"
         "steam"
 
