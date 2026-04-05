@@ -54,6 +54,8 @@ in
         "playcover-community"
         "whisky" # wineつかったほうがいい
 
+        # "mole" # なぜかエラーが出る
+
         "openclaw"
         "zen"
         "vivaldi"

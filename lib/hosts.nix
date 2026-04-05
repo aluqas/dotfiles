@@ -131,7 +131,7 @@
               extraSpecialArgs = specialArgs // {inherit repoRoot;};
               sharedModules = [
                 inputs.stylix.homeModules.stylix
-                inputs.nixvim.homeManagerModules.nixvim
+                inputs.nixvim.homeModules.nixvim
               ];
               users.${user} = {
                 imports = def.homeImports;

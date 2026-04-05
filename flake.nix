@@ -109,7 +109,7 @@
           defaultLocale = "en_US.UTF-8";
           checkoutDirName = "dotfiles";
           stateVersions = {
-            home = "24.11";
+            home = "25.05";
             nixos = "25.05";
             darwin = 6;
           };

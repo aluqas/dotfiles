@@ -183,7 +183,7 @@ in {
         autohide-time-modifier = 0.6; # Use a slightly faster Dock show and hide animation.
 
         magnification = true; # 拡大有効
-        tilesize = 28; # ドックアイコンのサイズ
+        tilesize = 20; # ドックアイコンのサイズ
         largesize = 72; # 拡大時のドックアイコンのサイズ
 
         show-process-indicators = true; # 起動中アプリをインジケーターに表示

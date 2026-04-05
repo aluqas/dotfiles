@@ -15,12 +15,15 @@ in
   config = lib.mkIf cfg.enable {
     programs.git = {
       enable = true;
-      userName = "saqula";
-      userEmail = "ping@saqu.la";
       settings = {
+        user = {
+          name = "saqula";
+          email = "ping@saqu.la";
+        };
         signing = {
           key = "SHA256:yRjkA01ttJW1nBQp0r1fkPv4eObJE/rmqw4TtFoMbFI";
           signByDefault = true;
+          format = "openpgp";
         };
         color = {
           diff = "auto";
@@ -36,7 +39,6 @@ in
         };
         tag.gpgSign = false;
         gpg = {
-          format = "openpgp";
           program = "gpg";
         };
         url."git@github.com:".insteadOf = "https://github.com/";
