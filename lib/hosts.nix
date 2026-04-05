@@ -61,7 +61,6 @@
       ../modules/nixos/programs.nix
       ../modules/nixos/security.nix
       ../modules/nixos/users.nix
-      ../modules/nixos/services
     ];
 
   baseNixpkgsModule = {

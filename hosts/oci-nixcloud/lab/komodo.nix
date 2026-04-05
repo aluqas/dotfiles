@@ -43,7 +43,7 @@
             MONGO_INITDB_ROOT_PASSWORD: $KOMODO_DB_PASSWORD
 
         core:
-          image: ghcr.io/moghtech/komodo-core:latest
+          image: ghcr.io/moghtech/komodo-core:2
           restart: unless-stopped
           depends_on:
             - mongo

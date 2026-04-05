@@ -11,6 +11,7 @@
   ...
 }: let
   cfg = config.saqula.core.network.tailscale;
+  tailscaleCfg = config.services.tailscale;
   inherit (saqulaLib) mkPlatformAssert;
 
   # フラグを組み立てるロジック
@@ -94,6 +95,8 @@ in {
     (lib.mkIf cfg.enable (
       lib.mkMerge [
         {
+          # NixOS の systemd.services 定義が package 付属 unit を上書きするため、
+          # tailscaled の起動コマンドをここで明示する。
           services.tailscale = {
             useRoutingFeatures = routingMode;
             openFirewall = true;
@@ -112,7 +115,26 @@ in {
             checkReversePath = "loose";
           };
 
-          systemd.services.tailscaled.serviceConfig.Restart = lib.mkForce "always";
+          systemd.services.tailscaled = {
+            script = ''
+              exec ${lib.getExe' tailscaleCfg.package "tailscaled"} \
+                --state=/var/lib/tailscale/tailscaled.state \
+                --socket=/run/tailscale/tailscaled.sock \
+                --port=${toString tailscaleCfg.port} \
+                $FLAGS
+            '';
+            serviceConfig = {
+              Type = "notify";
+              Restart = lib.mkForce "always";
+              ExecStopPost = "${lib.getExe' tailscaleCfg.package "tailscaled"} --cleanup";
+              RuntimeDirectory = "tailscale";
+              RuntimeDirectoryMode = "0755";
+              StateDirectory = "tailscale";
+              StateDirectoryMode = "0700";
+              CacheDirectory = "tailscale";
+              CacheDirectoryMode = "0750";
+            };
+          };
 
           # Tailscale persistence（impermanence 有効時）
           environment.persistence."/persist".directories = [
