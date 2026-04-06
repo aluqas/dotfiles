@@ -54,8 +54,6 @@
       ../modules/nixos/disks.nix
       ../modules/nixos/guardrails.nix
       ../modules/nixos/impermanence.nix
-      ../modules/nixos/locale.nix
-      ../modules/nixos/minimal.nix
       ../modules/nixos/network.nix
       ../modules/nixos/optimization.nix
       ../modules/nixos/programs.nix

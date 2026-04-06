@@ -23,16 +23,10 @@
       enable = true;
       shell = "fish";
     };
-    locale = {
-      enable = true;
-      inherit (hostVars) timezone;
-      inherit (hostVars) locale;
-    };
     impermanence.enable = false;
     optimization.enable = true;
     network.tailscale = {
       enable = true;
-      authKeyFile = config.age.secrets.tailscale-auth-key.path;
       inherit (hostVars.networking) acceptRoutes;
       inherit (hostVars.networking) advertiseExitNode;
       advertiseRoutes = hostVars.networking.subnets;
@@ -83,7 +77,12 @@
     "flakes"
   ];
 
+  time.timeZone = hostVars.timezone;
+  i18n.defaultLocale = hostVars.locale;
+
   fileSystems."/persist".neededForBoot = true;
+
+  saqula.core.network.tailscale.authKeyFile = config.age.secrets.tailscale-auth-key.path;
 
   services.openssh = {
     enable = lib.mkDefault true;

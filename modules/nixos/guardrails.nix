@@ -11,7 +11,11 @@
   ...
 }: let
   cfg = config.saqula.core.guardrails;
-  inherit (saqulaLib) mkPlatformAssert;
+  platformAssert = saqulaLib.mkPlatformAssert {
+    name = "guardrails";
+    platforms = ["nixos"];
+    inherit pkgs;
+  };
   inherit (pkgs.stdenv) isLinux;
 in {
   options.saqula.core.guardrails = {
@@ -24,11 +28,7 @@ in {
   };
 
   config = lib.mkMerge [
-    (mkPlatformAssert {
-      name = "guardrails";
-      platforms = ["nixos"];
-      inherit pkgs;
-    })
+    platformAssert
 
     (lib.mkIf (cfg.enable && isLinux) {
       # =========================================================================

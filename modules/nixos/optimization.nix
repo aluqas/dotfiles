@@ -12,7 +12,13 @@
 }: let
   cfg = config.saqula.core.optimization;
   cachixCfg = config.saqula.devex.cachix;
-  inherit (saqulaLib) secrets mkPlatformAssert;
+  cachixPushEnabled = cachixCfg.enable && cachixCfg.push.enable;
+  platformAssert = saqulaLib.mkPlatformAssert {
+    name = "optimization (NixOS)";
+    platforms = ["nixos"];
+    inherit pkgs;
+  };
+  inherit (saqulaLib) secrets;
   inherit (lib) mkEnableOption mkOption types;
 in {
   options.saqula.core.optimization = {
@@ -43,11 +49,7 @@ in {
   };
 
   config = lib.mkMerge [
-    (mkPlatformAssert {
-      name = "optimization (NixOS)";
-      platforms = ["nixos"];
-      inherit pkgs;
-    })
+    platformAssert
 
     (lib.mkIf cfg.enable {
       # =========================================================================
@@ -56,20 +58,16 @@ in {
       programs.ccache.enable = true;
 
       # ccache 用の extra sandbox path
-      nix.settings.extra-sandbox-paths = [
-        config.programs.ccache.cacheDir
-      ];
+      nix.settings.extra-sandbox-paths = [config.programs.ccache.cacheDir];
 
       # Rust が有効なら sccache 用 tmpfiles を作る
-      systemd.tmpfiles.rules = lib.mkIf config.saqula.core.optimization.rust.enable [
-        "d /var/cache/sccache 0777 root root - -"
-      ];
+      systemd.tmpfiles.rules = lib.optional cfg.rust.enable "d /var/cache/sccache 0777 root root - -";
     })
 
     # =========================================================================
     # Cachix Push Service（NixOS only）
     # =========================================================================
-    (lib.mkIf (cachixCfg.enable && cachixCfg.push.enable) {
+    (lib.mkIf cachixPushEnabled {
       assertions = [
         {
           assertion = cfg.enable;

@@ -37,17 +37,13 @@ in {
       inherit pkgs;
     })
 
-    (lib.mkIf cfg.enable (lib.mkMerge [
-      {
-        boot.initrd.systemd.enable = cfg.enableSystemdInitrd;
-        systemd.targets.multi-user.enable = true;
-      }
-      (lib.mkIf cfg.kernelSysctl.ipForward {
-        boot.kernel.sysctl = {
-          "net.ipv4.ip_forward" = 1;
-          "net.ipv6.conf.all.forwarding" = 1;
-        };
-      })
-    ]))
+    (lib.mkIf cfg.enable {
+      boot.initrd.systemd.enable = cfg.enableSystemdInitrd;
+      systemd.targets.multi-user.enable = true;
+      boot.kernel.sysctl = lib.mkIf cfg.kernelSysctl.ipForward {
+        "net.ipv4.ip_forward" = 1;
+        "net.ipv6.conf.all.forwarding" = 1;
+      };
+    })
   ];
 }

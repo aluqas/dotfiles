@@ -36,12 +36,6 @@
 in {
   options.saqula.core.network.tailscale = {
     enable = lib.mkEnableOption "Tailscale networking";
-    authKeyFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = "Path to a Tailscale auth key file.";
-    };
-
     acceptRoutes = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -83,6 +77,12 @@ in {
       default = [];
       description = "Additional flags passed to tailscale up.";
     };
+
+    authKeyFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Optional auth key file used to authenticate the node at startup.";
+    };
   };
 
   config = lib.mkMerge [
@@ -92,64 +92,57 @@ in {
       inherit pkgs;
     })
 
-    (lib.mkIf cfg.enable (
-      lib.mkMerge [
-        {
-          # `tailscaled` だけでなく CLI (`tailscale`) も常に使えるようにする。
-          environment.systemPackages = [
-            tailscaleCfg.package
-          ];
+    (lib.mkIf cfg.enable {
+      # `tailscaled` だけでなく CLI (`tailscale`) も常に使えるようにする。
+      environment.systemPackages = [tailscaleCfg.package];
 
-          # NixOS の systemd.services 定義が package 付属 unit を上書きするため、
-          # tailscaled の起動コマンドをここで明示する。
-          services.tailscale = {
-            useRoutingFeatures = routingMode;
-            openFirewall = true;
-            extraUpFlags =
-              acceptRoutesFlag
-              ++ (lib.optional cfg.advertiseExitNode "--advertise-exit-node")
-              ++ (lib.optional cfg.ssh "--ssh")
-              ++ advertiseRouteFlags
-              ++ hostnameFlag
-              ++ tagsFlag
-              ++ cfg.extraUpFlags;
-          };
+      # NixOS の systemd.services 定義が package 付属 unit を上書きするため、
+      # tailscaled の起動コマンドをここで明示する。
+      services.tailscale = {
+        useRoutingFeatures = routingMode;
+        openFirewall = true;
+        extraUpFlags =
+          acceptRoutesFlag
+          ++ (lib.optional cfg.advertiseExitNode "--advertise-exit-node")
+          ++ (lib.optional cfg.ssh "--ssh")
+          ++ advertiseRouteFlags
+          ++ hostnameFlag
+          ++ tagsFlag
+          ++ cfg.extraUpFlags;
+      };
 
-          networking.firewall = {
-            trustedInterfaces = ["tailscale0"];
-            checkReversePath = "loose";
-          };
+      networking.firewall = {
+        trustedInterfaces = ["tailscale0"];
+        checkReversePath = "loose";
+      };
 
-          systemd.services.tailscaled = {
-            script = ''
-              exec ${lib.getExe' tailscaleCfg.package "tailscaled"} \
-                --state=/var/lib/tailscale/tailscaled.state \
-                --socket=/run/tailscale/tailscaled.sock \
-                --port=${toString tailscaleCfg.port} \
-                $FLAGS
-            '';
-            serviceConfig = {
-              Type = "notify";
-              Restart = lib.mkForce "always";
-              ExecStopPost = "${lib.getExe' tailscaleCfg.package "tailscaled"} --cleanup";
-              RuntimeDirectory = "tailscale";
-              RuntimeDirectoryMode = "0755";
-              StateDirectory = "tailscale";
-              StateDirectoryMode = "0700";
-              CacheDirectory = "tailscale";
-              CacheDirectoryMode = "0750";
-            };
-          };
+      systemd.services.tailscaled = {
+        script = ''
+          exec ${lib.getExe' tailscaleCfg.package "tailscaled"} \
+            --state=/var/lib/tailscale/tailscaled.state \
+            --socket=/run/tailscale/tailscaled.sock \
+            --port=${toString tailscaleCfg.port} \
+            $FLAGS
+        '';
+        serviceConfig = {
+          Type = "notify";
+          Restart = lib.mkForce "always";
+          ExecStopPost = "${lib.getExe' tailscaleCfg.package "tailscaled"} --cleanup";
+          RuntimeDirectory = "tailscale";
+          RuntimeDirectoryMode = "0755";
+          StateDirectory = "tailscale";
+          StateDirectoryMode = "0700";
+          CacheDirectory = "tailscale";
+          CacheDirectoryMode = "0750";
+        };
+      };
 
-          # Tailscale persistence（impermanence 有効時）
-          environment.persistence."/persist".directories = [
-            "/var/lib/tailscale"
-          ];
-        }
-        (lib.mkIf (cfg.authKeyFile != null) {
-          services.tailscale.authKeyFile = cfg.authKeyFile;
-        })
-      ]
-    ))
+      # Tailscale persistence（impermanence 有効時）
+      environment.persistence."/persist".directories = ["/var/lib/tailscale"];
+    })
+
+    (lib.mkIf (cfg.enable && cfg.authKeyFile != null) {
+      services.tailscale.authKeyFile = cfg.authKeyFile;
+    })
   ];
 }

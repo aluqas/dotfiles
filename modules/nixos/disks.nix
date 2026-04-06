@@ -120,10 +120,10 @@ in {
       inherit pkgs;
     })
 
-    # =========================================================================
-    # Btrfs ルート設定
-    # =========================================================================
     (lib.mkIf cfg.btrfsRoot.enable {
+      # =========================================================================
+      # Btrfs ルート設定
+      # =========================================================================
       disko.devices.disk.main = {
         type = "disk";
         inherit (cfg.btrfsRoot) device;
@@ -166,10 +166,10 @@ in {
       };
     })
 
-    # =========================================================================
-    # Block Storage 設定
-    # =========================================================================
     (lib.mkIf cfg.blockStorage.enable {
+      # =========================================================================
+      # Block Storage 設定
+      # =========================================================================
       disko.devices.disk.storage = {
         type = "disk";
         inherit (cfg.blockStorage) device;
@@ -183,9 +183,7 @@ in {
                 inherit (cfg.blockStorage) format;
                 inherit (cfg.blockStorage) mountpoint;
                 mountOptions =
-                  [
-                    "defaults"
-                  ]
+                  ["defaults"]
                   ++ lib.optionals cfg.blockStorage.nofail [
                     "nofail"
                     "x-systemd.device-timeout=${cfg.blockStorage.timeout}"

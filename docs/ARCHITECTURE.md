@@ -273,7 +273,6 @@ core module の例:
 - `disks.nix`
 - `guardrails.nix`
 - `impermanence.nix`
-- `locale.nix`
 - `minimal.nix`
 - `network.nix`
 - `optimization.nix`
@@ -282,6 +281,8 @@ core module の例:
 - `users.nix`
 
 これらは host で何度も使う基礎機能を module 化したものです。
+
+`locale` と timezone のように host ごとの差分しかない値は、NixOS module ではなく `hosts/*/default.nix` 側に直接置きます。
 
 ### `modules/nixos/services/*`
 
