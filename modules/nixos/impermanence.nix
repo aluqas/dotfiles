@@ -227,7 +227,6 @@ in {
               ".gnupg"
               ".kube"
               ".docker"
-              ".config/gh"
               ".local/share/fish"
               ".local/share/zoxide"
               ".local/share/direnv"

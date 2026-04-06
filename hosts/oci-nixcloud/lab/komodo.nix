@@ -2,7 +2,7 @@
 #
 # Podman 上で Komodo Core / Periphery を動かす。
 #
-{config, ...}: {
+{...}: {
   networking.firewall.allowedTCPPorts = [
     9120
     8120
@@ -72,17 +72,4 @@
     '';
   };
 
-  services.tailscale-sidecar.instances.komodo = {
-    enable = true;
-    backend = "podman";
-    authKeyFile = config.age.secrets.tailscale-auth-key.path;
-
-    serve = {
-      enable = true;
-      port = 443;
-      targetUrl = "http://localhost:9120";
-    };
-
-    waitFor = ["komodo.service"];
-  };
 }

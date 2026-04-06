@@ -95,6 +95,11 @@ in {
     (lib.mkIf cfg.enable (
       lib.mkMerge [
         {
+          # `tailscaled` だけでなく CLI (`tailscale`) も常に使えるようにする。
+          environment.systemPackages = [
+            tailscaleCfg.package
+          ];
+
           # NixOS の systemd.services 定義が package 付属 unit を上書きするため、
           # tailscaled の起動コマンドをここで明示する。
           services.tailscale = {

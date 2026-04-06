@@ -13,7 +13,7 @@
     ./containerd.nix
     ./podman.nix
     ./runtimes.nix
-    ./tailscale-sidecar.nix
+    ./tailscale-service.nix
     ./compose-service.nix
     ./coolify.nix
     ./dokploy.nix

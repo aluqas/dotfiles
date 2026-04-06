@@ -14,19 +14,6 @@
     8843
   ];
 
-  # generic な Tailscale Sidecar abstraction を使う
-  services.tailscale-sidecar.instances.dokploy = {
-    enable = true;
-    backend = "podman";
-    authKeyFile = config.age.secrets.tailscale-auth-key.path;
-
-    serve = {
-      enable = true;
-      port = 443;
-      targetUrl = "http://localhost:3001";
-    };
-  };
-
   # Docker Swarm が初期化されていることを保証する
   systemd.services.docker-swarm-init = {
     description = "Initialize Docker Swarm";

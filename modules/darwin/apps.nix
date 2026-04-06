@@ -55,6 +55,8 @@ in
         "whisky" # wineつかったほうがいい
 
         "openclaw"
+        "tailscale"
+
         "zen"
         "vivaldi"
 

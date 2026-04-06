@@ -58,6 +58,48 @@
     "d /data/coolify/proxy/dynamic 0700 9999 root -"
   ];
 
+  # Localhost server 用の SSH 鍵を初期化する。
+  # install.sh の手順を宣言的に再現し、Server validation 失敗を避ける。
+  systemd.services.coolify-ssh-bootstrap = {
+    description = "Bootstrap SSH key for Coolify localhost server";
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
+    path = with pkgs; [
+      coreutils
+      gnugrep
+      openssh
+    ];
+    script = ''
+      KEY_PATH="/data/coolify/ssh/keys/id.root@host.docker.internal"
+      PUB_PATH="''${KEY_PATH}.pub"
+      ROOT_SSH_DIR="/root/.ssh"
+      AUTH_KEYS="''${ROOT_SSH_DIR}/authorized_keys"
+
+      install -d -m 0700 /data/coolify/ssh /data/coolify/ssh/keys /data/coolify/ssh/mux
+      install -d -m 0700 "''${ROOT_SSH_DIR}"
+
+      if [ ! -f "''${KEY_PATH}" ]; then
+        ssh-keygen -t ed25519 -N "" -C "root@coolify" -f "''${KEY_PATH}"
+      fi
+
+      touch "''${AUTH_KEYS}"
+      chmod 0600 "''${AUTH_KEYS}"
+
+      PUB_KEY=$(cat "''${PUB_PATH}")
+      if ! grep -qxF "''${PUB_KEY}" "''${AUTH_KEYS}"; then
+        echo "''${PUB_KEY}" >> "''${AUTH_KEYS}"
+      fi
+
+      chown 9999:root "''${KEY_PATH}" "''${PUB_PATH}"
+      chmod 0600 "''${KEY_PATH}"
+      chmod 0644 "''${PUB_PATH}"
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
+
   # 抽象化 module 経由で Coolify service を作る
   services.compose-service.instances.coolify = {
     enable = true;
@@ -75,7 +117,7 @@
       APP_NAME = "Coolify";
       APP_ENV = "production";
       APP_KEY = "base64:8Tk/pcKueMdAhRv1CRc8owylsCd5EhjePgAFpwlPyJ0=";
-      APP_URL = "http://localhost:8001";
+      APP_URL = "https://coolify.fairy-sargas.ts.net";
       APP_DEBUG = "false";
       APP_PORT = "8001";
 
@@ -98,7 +140,9 @@
       PUSHER_APP_ID = "coolify-pusher-id";
       PUSHER_APP_KEY = "coolify-pusher-key";
       PUSHER_APP_SECRET = "coolify-pusher-secret-2024";
-      PUSHER_SCHEME = "https"; # HTTPS via Tailscale
+      PUSHER_SCHEME = "http"; # backend -> soketi は container network の平文 HTTP
+      PUSHER_BACKEND_HOST = "coolify-realtime";
+      PUSHER_BACKEND_PORT = "6001";
 
       MIX_PUSHER_APP_KEY = "coolify-pusher-key";
       MIX_PUSHER_HOST = "coolify.fairy-sargas.ts.net";
@@ -225,38 +269,10 @@
     '';
   };
 
-  # Coolify 用の Tailscale Sidecar
-  services.tailscale-sidecar.instances.coolify = {
-    enable = true;
-    backend = "podman";
-    authKeyFile = config.age.secrets.tailscale-auth-key.path;
-
-    serve = {
-      enable = true;
-      port = 443;
-      targetUrl = "http://localhost:8001";
-    };
-
-    waitFor = ["coolify.service"];
+  # 鍵初期化後に Coolify を起動する。
+  systemd.services.coolify = {
+    after = ["coolify-ssh-bootstrap.service"];
+    requires = ["coolify-ssh-bootstrap.service"];
   };
 
-  # Soketi を 6001 で Tailscale 公開する追加 service
-  systemd.services.coolify-tailscale-soketi = {
-    description = "Configure Tailscale Serve for Soketi (Coolify Realtime)";
-    after = ["coolify-tailscale-config.service"];
-    requires = ["podman-coolify-tailscale.service"];
-    wantedBy = ["multi-user.target"];
-
-    path = [pkgs.podman];
-
-    script = ''
-      echo "Configuring Tailscale Serve for Soketi (6001)..."
-      podman exec coolify-tailscale tailscale serve --bg --https=6001 http://localhost:6001
-    '';
-
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-  };
 }
