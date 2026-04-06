@@ -16,7 +16,6 @@
     boot.enable = true;
     programs = {
       enable = true;
-      shell = "fish";
     };
     users = {
       enable = true;

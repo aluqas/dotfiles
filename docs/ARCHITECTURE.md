@@ -110,6 +110,53 @@
 
 回収したいなら `mkOutOfStoreSymlink`、回収しないならそもそも Nix で管理しません。
 
+## ディレクトリ配置ポリシー
+
+この repo では、`persist` と dotfiles 由来の配置をできるだけ見通しよく保つことを重視します。
+重要なのは「何が永続か」「どの file が Nix 管理か」を、後から追える状態にすることです。
+
+### `persist` の方針
+
+- `persist` のトップレベル構成は少数に固定する
+- 例: `/persist/etc`, `/persist/var`, `/persist/home` のように root を決める
+- その root 一覧は `modules/nixos/impermanence.nix` に集約する
+- サービス固有の追加永続化は、そのサービスの module に近い場所で追加する
+- disk / subvolume の物理レイアウトは `hosts/*/disk-config.nix` で持つ
+
+補足:
+
+- `age` identity のように復号や起動に直結するものは、`persist` 側の配置を優先する
+- 既存 root の下に置けるものは、無理に新しい top-level root を増やさない
+
+### Home Manager の配置方針
+
+Home Manager では、用途ごとに使い分けを固定します。
+
+- `xdg.configFile`
+  - `~/.config/*` 配下に置く設定の基本
+- `home.file`
+  - `~/.bashrc` のような XDG 外の単一ファイル
+- `mkOutOfStoreSymlink`
+  - repo の実体をそのまま見せたいときだけ使う
+  - 編集内容を repo に回収したい、またはアプリ側で直接更新したい場合に限定する
+- `recursive = true`
+  - subtree を丸ごと HM 管理したい場合だけ使う
+  - 乱用しない。何が管理対象か追いにくくなるため
+
+運用上の目安:
+
+- `~/.config/*` に入るものはまず `xdg.configFile` を検討する
+- `home.file` は legacy な単体ファイル向けに留める
+- directory 単位の link は、配下に runtime state が混ざらないことを先に確認する
+
+### 集約の方針
+
+- `persist` の root inventory は中央に寄せる
+- ただし root の下に置く具体的な file / directory は、密結合な module に残してよい
+- `dotfiles` の file 配置は、`modules/home/*` で定義して追跡しやすくする
+- host 固有の例外は `hosts/*` に閉じ込める
+- `outOfStoreSymlink` を使う理由は、コメントで明示する
+
 ## 評価と組み立ての流れ
 
 この repo の中心は `flake.nix` と `lib/hosts.nix` です。
@@ -460,7 +507,8 @@ impermanence は NixOS 側の横断機能です。
 - 実装: `modules/nixos/impermanence.nix`
 - host 側の disk / persist layout と組み合わせて動く
 
-永続化対象の共通一覧は `lib/vars.nix` にあり、system 側の rollback / persistence 実装は `modules/nixos/impermanence.nix` にあります。
+永続化対象の root 一覧と system 側の rollback / persistence 実装は `modules/nixos/impermanence.nix` にあります。
+サービス固有の追加永続化は、それぞれの system module に近い場所で足します。
 
 ## 〇〇したいとき
 

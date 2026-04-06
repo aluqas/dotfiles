@@ -21,7 +21,6 @@
     };
     programs = {
       enable = true;
-      shell = "fish";
     };
     impermanence.enable = false;
     optimization.enable = true;

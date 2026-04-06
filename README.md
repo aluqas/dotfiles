@@ -104,6 +104,17 @@ clean
 つまり、`/nix/store` に固定したいかどうかではなく、
 「その変更を repo で追いたいか」「app に自由に書かせるべきか」を先に判断する運用です。
 
+### 配置ルールの要点
+
+- `persist` の root 構成は `modules/nixos/impermanence.nix` に集約する
+- service 固有の追加永続化は、その service module に近い場所で足す
+- `~/.config/*` は基本 `xdg.configFile`
+- XDG 外の単体ファイルは `home.file`
+- `mkOutOfStoreSymlink` は repo の実体を見せたい場合だけ使う
+- `recursive = true` は subtree を丸ごと管理したいときだけ使う
+
+詳しい判断基準は [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) の「ディレクトリ配置ポリシー」を参照してください。
+
 ## 共通機能
 
 ### Stylix / テーマ

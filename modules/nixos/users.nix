@@ -66,7 +66,7 @@ in {
         };
       };
 
-      security.sudo.extraRules = lib.optional cfg.passwordlessSudo {
+    security.sudo.extraRules = lib.optional cfg.passwordlessSudo {
         users = [cfg.username];
         commands = [
           {
@@ -75,5 +75,7 @@ in {
           }
         ];
       };
+
+      programs.fish.enable = cfg.shell == pkgs.fish;
     };
 }
