@@ -54,14 +54,11 @@
       ../modules/nixos/disks.nix
       ../modules/nixos/guardrails.nix
       ../modules/nixos/impermanence.nix
-      ../modules/nixos/locale.nix
-      ../modules/nixos/minimal.nix
       ../modules/nixos/network.nix
       ../modules/nixos/optimization.nix
       ../modules/nixos/programs.nix
       ../modules/nixos/security.nix
       ../modules/nixos/users.nix
-      ../modules/nixos/services
     ];
 
   baseNixpkgsModule = {
@@ -100,6 +97,7 @@
         inputs.disko.nixosModules.disko
         inputs.nix-index-database.nixosModules.nix-index
         inputs.impermanence.nixosModules.impermanence
+        inputs.arion.nixosModules.arion
       ];
     build =
       if isDarwin

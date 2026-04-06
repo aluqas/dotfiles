@@ -57,6 +57,8 @@ in
         # "mole" # なぜかエラーが出る
 
         "openclaw"
+        "tailscale"
+
         "zen"
         "vivaldi"
 

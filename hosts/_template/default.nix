@@ -16,12 +16,6 @@
     boot.enable = true;
     programs = {
       enable = true;
-      shell = "fish";
-    };
-    locale = {
-      enable = true;
-      inherit (hostVars) timezone;
-      inherit (hostVars) locale;
     };
     users = {
       enable = true;
@@ -57,6 +51,9 @@
     "nix-command"
     "flakes"
   ];
+
+  time.timeZone = hostVars.timezone;
+  i18n.defaultLocale = hostVars.locale;
 
   services.openssh = {
     enable = lib.mkDefault true;

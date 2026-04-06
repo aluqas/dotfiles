@@ -48,14 +48,13 @@ in {
     };
   };
 
-  config = lib.mkMerge [
+  config =
     (mkPlatformAssert {
       name = "users";
       platforms = ["nixos"];
       inherit pkgs;
     })
-
-    (lib.mkIf cfg.enable {
+    // lib.mkIf cfg.enable {
       users = {
         mutableUsers = false;
         groups.${cfg.username} = {};
@@ -67,17 +66,16 @@ in {
         };
       };
 
-      security.sudo.extraRules = lib.mkIf cfg.passwordlessSudo [
-        {
-          users = [cfg.username];
-          commands = [
-            {
-              command = "ALL";
-              options = ["NOPASSWD"];
-            }
-          ];
-        }
-      ];
-    })
-  ];
+    security.sudo.extraRules = lib.optional cfg.passwordlessSudo {
+        users = [cfg.username];
+        commands = [
+          {
+            command = "ALL";
+            options = ["NOPASSWD"];
+          }
+        ];
+      };
+
+      programs.fish.enable = cfg.shell == pkgs.fish;
+    };
 }

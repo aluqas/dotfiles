@@ -1,6 +1,6 @@
-# NixOS 専用の programs 設定
+# NixOS 専用の runtime 設定
 #
-# FUSE, nix-ld, などの NixOS 専用 program 設定。
+# FUSE, nix-ld, などの NixOS 専用 runtime 設定。
 # この module は NixOS でのみ import する。
 #
 {
@@ -14,12 +14,7 @@
   inherit (saqulaLib) mkPlatformAssert;
 in {
   options.saqula.core.programs = {
-    enable = lib.mkEnableOption "NixOS program integrations";
-    shell = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum ["fish"]);
-      default = null;
-      description = "system レベルで有効にする宣言的な login shell サポート。";
-    };
+    enable = lib.mkEnableOption "NixOS runtime integrations";
   };
 
   config = lib.mkMerge [
@@ -39,8 +34,6 @@ in {
           enable = true;
           libraries = [];
         };
-
-        fish.enable = cfg.shell == "fish";
       };
     })
   ];
