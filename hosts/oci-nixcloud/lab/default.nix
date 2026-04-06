@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   saqulaLib,
   ...
 }: {
@@ -14,7 +15,6 @@
     ./podman.nix
     ./runtimes.nix
     ./tailscale-service.nix
-    ./compose-service.nix
     ./coolify.nix
     ./dokploy.nix
     ./komodo.nix
@@ -24,9 +24,15 @@
   saqula.system.services = {
     container = {
       podman.enable = true;
-      containerd.enable = true;
     };
   };
+
+  virtualisation.arion.backend = "docker";
+
+  environment.systemPackages = [
+    pkgs.arion
+    pkgs.docker-client
+  ];
 
   virtualisation.podman.dockerCompat = lib.mkForce false;
 }

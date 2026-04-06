@@ -1,167 +1,111 @@
 # Dokploy PaaS
 #
-# Docker Swarm ベースの application deployment platform
-#
+# Arion で Dokploy / Postgres / Redis / Traefik を宣言的に管理する。
 {
   pkgs,
-  config,
   ...
 }: {
   virtualisation.docker.enable = true;
+
   networking.firewall.allowedTCPPorts = [
     3001
     8880
     8843
   ];
 
-  # Docker Swarm が初期化されていることを保証する
-  systemd.services.docker-swarm-init = {
-    description = "Initialize Docker Swarm";
-    after = ["docker.service"];
-    requires = ["docker.service"];
-    wantedBy = ["multi-user.target"];
-    path = with pkgs; [
-      docker
-      tailscale
-      gawk
-      hostname
-    ];
-    script = ''
-      if ! docker info 2>/dev/null | grep -q "Swarm: active"; then
-         ADVERTISE_ADDR=$(tailscale ip -4 2>/dev/null || hostname -I | awk '{print $1}')
-         if [ -z "$ADVERTISE_ADDR" ]; then
-            ADVERTISE_ADDR="127.0.0.1"
-         fi
-         echo "Initializing Swarm with advertise-addr: $ADVERTISE_ADDR"
-         docker swarm init --advertise-addr "$ADVERTISE_ADDR" || true
-      fi
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-  };
+  systemd.tmpfiles.rules = [
+    "d /data/apps/dokploy 0755 root root -"
+    "d /data/apps/dokploy/postgres 0755 root root -"
+    "d /data/apps/dokploy/redis 0755 root root -"
+    "d /data/apps/dokploy/docker 0755 root root -"
+  ];
 
-  # Dokploy を install する oneshot service
-  systemd.services.dokploy-install = {
-    description = "Install Dokploy PaaS";
-    after = [
-      "docker.service"
-      "docker-swarm-init.service"
-      "network-online.target"
-    ];
-    requires = [
-      "docker.service"
-      "docker-swarm-init.service"
-    ];
-    wants = ["network-online.target"];
-    wantedBy = ["multi-user.target"];
+  virtualisation.arion.projects.dokploy = {
+    serviceName = "dokploy";
+    settings = {
+      project.name = "dokploy";
 
-    path = with pkgs; [
-      docker
-      curl
-      bash
-      coreutils
-      gnugrep
-      tailscale
-      gawk
-      hostname
-    ];
+      services = {
+        postgres.service = {
+          image = "postgres:16";
+          restart = "always";
+          networks = ["dokploy-network"];
+          environment = {
+            POSTGRES_USER = "dokploy";
+            POSTGRES_DB = "dokploy";
+            POSTGRES_PASSWORD = "dokploy_postgres_password_2026";
+          };
+          volumes = [
+            "/data/apps/dokploy/postgres:/var/lib/postgresql/data"
+          ];
+        };
 
-    script = ''
-      # advertise address を決める
-      export ADVERTISE_ADDR=$(tailscale ip -4 2>/dev/null || hostname -I | awk '{print $1}')
-      if [ -z "$ADVERTISE_ADDR" ]; then
-          export ADVERTISE_ADDR="127.0.0.1"
-      fi
-      echo "Detected ADVERTISE_ADDR: $ADVERTISE_ADDR"
+        redis.service = {
+          image = "redis:7";
+          restart = "always";
+          networks = ["dokploy-network"];
+          volumes = [
+            "/data/apps/dokploy/redis:/data"
+          ];
+        };
 
+        dokploy.service = {
+          image = "dokploy/dokploy:latest";
+          restart = "always";
+          networks = ["dokploy-network"];
+          depends_on = [
+            "postgres"
+            "redis"
+          ];
+          ports = [
+            "3001:3000"
+          ];
+          extra_hosts = [
+            "host.docker.internal:host-gateway"
+          ];
+          environment = {
+            ADVERTISE_ADDR = "host.docker.internal";
+          };
+          volumes = [
+            "/var/run/docker.sock:/var/run/docker.sock"
+            "/data/apps/dokploy:/etc/dokploy"
+            "/data/apps/dokploy/docker:/root/.docker"
+          ];
+        };
 
+        traefik.service = {
+          image = "traefik:v3.6.1";
+          restart = "always";
+          networks = ["dokploy-network"];
+          depends_on = ["dokploy"];
+          ports = [
+            "8880:80"
+            "8843:443"
+            "8843:443/udp"
+          ];
+          command = [
+            "--providers.docker=true"
+            "--providers.docker.exposedbydefault=false"
+            "--entrypoints.web.address=:80"
+            "--entrypoints.websecure.address=:443"
+          ];
+          volumes = [
+            "/var/run/docker.sock:/var/run/docker.sock:ro"
+          ];
+        };
+      };
 
-      echo "Installing Dokploy..."
-
-      # Network
-      docker network create --driver overlay --attachable dokploy-network 2>/dev/null || true
-
-      # Directories
-      mkdir -p /data/apps/dokploy
-      chmod 777 /data/apps/dokploy
-
-      # Postgres
-      echo "Creating Postgres..."
-      docker service create \
-        --name dokploy-postgres \
-        --constraint 'node.role==manager' \
-        --network dokploy-network \
-        --env POSTGRES_USER=dokploy \
-        --env POSTGRES_DB=dokploy \
-        --env POSTGRES_PASSWORD=amukds4wi9001583845717ad2 \
-        --mount type=volume,source=dokploy-postgres,target=/var/lib/postgresql/data \
-        postgres:16 || true
-
-      # Redis
-      echo "Creating Redis..."
-      docker service create \
-        --name dokploy-redis \
-        --constraint 'node.role==manager' \
-        --network dokploy-network \
-        --mount type=volume,source=dokploy-redis,target=/data \
-        redis:7 || true
-
-      # Dokploy Core（UI は port 3001）
-      echo "Creating Dokploy Core..."
-      docker service create \
-        --name dokploy \
-        --replicas 1 \
-        --network dokploy-network \
-        --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
-        --mount type=bind,source=/data/apps/dokploy,target=/etc/dokploy \
-        --mount type=volume,source=dokploy,target=/root/.docker \
-        --publish published=3001,target=3000,mode=host \
-        --update-parallelism 1 \
-        --update-order stop-first \
-        --constraint 'node.role == manager' \
-        -e ADVERTISE_ADDR=$ADVERTISE_ADDR \
-        dokploy/dokploy:latest || true
-
-      # Traefik（HTTP は 8880、HTTPS は 8843）
-      echo "Starting Traefik..."
-      docker rm -f dokploy-traefik 2>/dev/null || true
-      docker run -d \
-        --name dokploy-traefik \
-        --restart always \
-        -v /data/apps/dokploy/traefik/traefik.yml:/etc/traefik/traefik.yml \
-        -v /data/apps/dokploy/traefik/dynamic:/etc/dokploy/traefik/dynamic \
-        -v /var/run/docker.sock:/var/run/docker.sock:ro \
-        -p 8880:80/tcp \
-        -p 8843:443/tcp \
-        -p 8843:443/udp \
-        traefik:v3.6.1 || true
-
-      docker network connect dokploy-network dokploy-traefik || true
-
-      echo "Dokploy installation complete!"
-    '';
-
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
+      networks.dokploy-network = {
+        driver = "bridge";
+        name = "dokploy-network";
+      };
     };
   };
 
   environment.systemPackages = with pkgs; [
     (writeScriptBin "dokploy-logs" ''
       #!/usr/bin/env bash
-      sudo docker logs -f dokploy
-    '')
-    (writeScriptBin "dokploy-reinstall" ''
-      #!/usr/bin/env bash
-      echo "Removing existing Dokploy installation..."
-      sudo docker stop dokploy dokploy-postgres dokploy-redis dokploy-traefik 2>/dev/null || true
-      sudo docker rm dokploy dokploy-postgres dokploy-redis dokploy-traefik 2>/dev/null || true
-      sudo docker volume rm dokploy-data dokploy-postgres-data dokploy-redis-data 2>/dev/null || true
-      echo "Reinstalling Dokploy..."
-      curl -sSL https://dokploy.com/install.sh | sudo bash
+      docker logs -f dokploy-dokploy-1
     '')
   ];
 }

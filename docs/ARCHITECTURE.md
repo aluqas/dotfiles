@@ -295,7 +295,6 @@ container runtime と周辺機能です。
 - `containerd.nix`
 - `podman.nix`
 - `runtimes.nix`
-- `compose-service.nix`
 - `tailscale-service.nix`
 
 Docker / Podman / containerd 周辺の再利用可能な実装はここに置きます。

@@ -99,6 +99,7 @@
         inputs.disko.nixosModules.disko
         inputs.nix-index-database.nixosModules.nix-index
         inputs.impermanence.nixosModules.impermanence
+        inputs.arion.nixosModules.arion
       ];
     build =
       if isDarwin
